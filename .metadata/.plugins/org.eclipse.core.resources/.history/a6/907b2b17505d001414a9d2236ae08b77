@@ -1,0 +1,7 @@
+package com.felix.interlogic.chat;
+
+import javax.swing.JFrame;
+
+public class ChatWindow extends JFrame {
+
+}
