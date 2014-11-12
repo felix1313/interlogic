@@ -1,4 +1,4 @@
-package felix.interlogic.game.db.model;
+package com.felix.interlogic.game.db.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-;
+
 
 @Entity
 @Table(name = "user")
