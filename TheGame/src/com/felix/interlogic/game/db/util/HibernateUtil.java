@@ -1,5 +1,8 @@
 package com.felix.interlogic.game.db.util;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.SessionFactoryObserver;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -30,8 +33,19 @@ public class HibernateUtil {
 	}
 
 	public static SessionFactory getSessionFactory() {
-		if (sessionFactory == null)
+		if (sessionFactory == null) {
 			createSessionFactory();
+			sessionFactory.openSession();
+		}
 		return sessionFactory;
+	}
+	
+	private static EntityManagerFactory entityManagerFactory = null;
+
+	synchronized public static EntityManagerFactory getEntityManagerFactory() {
+		if (entityManagerFactory == null)
+			entityManagerFactory = Persistence
+					.createEntityManagerFactory("com.felix.interlogic.game");
+		return entityManagerFactory;
 	}
 }

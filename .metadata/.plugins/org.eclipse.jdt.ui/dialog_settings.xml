@@ -9,6 +9,13 @@
 	<section name="GenerateConstructorUsingFieldsSelectionDialog">
 		<item value="false" key="OmitCallToSuper"/>
 	</section>
+	<section name="DialogBounds_SuperInterfaceSelectionDialog">
+		<item value="414" key="DIALOG_WIDTH"/>
+		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="627" key="DIALOG_HEIGHT"/>
+		<item value="120" key="DIALOG_X_ORIGIN"/>
+		<item value="0" key="DIALOG_Y_ORIGIN"/>
+	</section>
 	<section name="org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart">
 		<item value="2" key="layout"/>
 		<item value="true" key="group_libraries"/>
@@ -43,6 +50,10 @@
 		<item value="0" key="DIALOG_Y_ORIGIN"/>
 		<item value="327" key="DIALOG_X_ORIGIN"/>
 	</section>
+	<section name="org.eclipse.jdt.internal.ui.dialogs.OpenTypeSelectionDialog2">
+		<item value="true" key="ShowStatusLine"/>
+		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0A;&lt;History/&gt;" key="History"/>
+	</section>
 	<section name="DialogBounds_GenerateToStringDialog">
 		<item value="574" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
@@ -58,6 +69,7 @@
 		<item value="true" key="IgnoreDefault"/>
 		<item value="false" key="SynchronizedModifier"/>
 		<item value="false" key="Comments"/>
+		<item value="2" key="InsertPosition.v2"/>
 		<item value="1" key="VisibilityModifier"/>
 		<item value="0" key="StringStyle"/>
 		<item value="0" key="ToStringTemplateSelected"/>
@@ -83,6 +95,14 @@
 	</section>
 	<section name="BuildPathsPropertyPage">
 		<item value="3" key="pageIndex"/>
+	</section>
+	<section name="nls_accessor_history">
+		<section name="0">
+			<item value="Messages" key="accessorName"/>
+			<item value="=TheGame/src&lt;com.felix.interlogic.game.model" key="bundlePackage"/>
+			<item value="messages.properties" key="bundleName"/>
+			<item value="=TheGame/src&lt;com.felix.interlogic.game.model" key="accessorPackage"/>
+		</section>
 	</section>
 	<section name="completion_proposal_size">
 	</section>

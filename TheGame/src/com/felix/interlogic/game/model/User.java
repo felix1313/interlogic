@@ -1,14 +1,16 @@
-package com.felix.interlogic.game.db.model;
+package com.felix.interlogic.game.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import static javax.persistence.GenerationType.IDENTITY;
-
-
 
 @Entity
 @Table(name = "user")
@@ -16,6 +18,7 @@ public class User {
 	private Integer id;
 	private String login;
 	private String password;
+	private Game game;
 
 	public User() {
 	}
@@ -27,7 +30,7 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
+	@Column(name = "user_id", unique = true, nullable = false)
 	public Integer getId() {
 		return id;
 	}
@@ -36,7 +39,7 @@ public class User {
 		this.id = id;
 	}
 
-	@Column(name = "login")
+	@Column(name = "login", unique = true, nullable = false)
 	public String getLogin() {
 		return login;
 	}
@@ -52,6 +55,16 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Game.class, cascade=CascadeType.REFRESH)
+	@JoinColumn(name = "game_id")
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
 	}
 
 	@Override
