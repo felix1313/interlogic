@@ -16,5 +16,6 @@ public class UserDao extends GenericDaoJpa<User, Integer> {
 
 	@Override
 	protected void fetchCollections(User entity) {
+		entity.getUserGames().size();
 	}
 }

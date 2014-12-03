@@ -3,7 +3,6 @@ package com.felix.interlogic.game.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,7 +17,7 @@ import javax.persistence.Table;
 public class Game {
 	private Long gameId;
 	private String gamePassword;
-	public Set<User> players = new HashSet<>();
+	public Set<UserGame> userGames = new HashSet<UserGame>();
 
 	public Game() {
 
@@ -44,24 +43,14 @@ public class Game {
 		this.gamePassword = gamePassword;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "game", cascade = CascadeType.REFRESH)
-	public Set<User> getPlayers() {
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.game")
+	public Set<UserGame> getUserGames() {
 
-		return players;
+		return userGames;
 	}
 
-	public void setPlayers(Set<User> players) {
-		this.players = players;
-	}
-
-	public void addPlayer(User u) {
-		this.players.add(u);
-	}
-
-	@Override
-	public String toString() {
-		return "Game [gameId=" + gameId + ", gamePassword=" + gamePassword
-				+ "]";
+	public void setUserGame(Set<UserGame> userGames) {
+		this.userGames = userGames;
 	}
 
 	@Override
@@ -69,6 +58,10 @@ public class Game {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((gameId == null) ? 0 : gameId.hashCode());
+		result = prime * result
+				+ ((gamePassword == null) ? 0 : gamePassword.hashCode());
+		result = prime * result
+				+ ((userGames == null) ? 0 : userGames.hashCode());
 		return result;
 	}
 
@@ -85,6 +78,16 @@ public class Game {
 			if (other.gameId != null)
 				return false;
 		} else if (!gameId.equals(other.gameId))
+			return false;
+		if (gamePassword == null) {
+			if (other.gamePassword != null)
+				return false;
+		} else if (!gamePassword.equals(other.gamePassword))
+			return false;
+		if (userGames == null) {
+			if (other.userGames != null)
+				return false;
+		} else if (!userGames.equals(other.userGames))
 			return false;
 		return true;
 	}
