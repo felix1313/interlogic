@@ -1,8 +1,10 @@
 package com.felix.interlogic.game.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +17,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Serializable{
 	private Integer id;
 	private String login;
 	private String password;
@@ -58,7 +60,7 @@ public class User {
 		this.password = password;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
 	public Set<UserGame> getUserGames() {
 		return userGames;
 	}
