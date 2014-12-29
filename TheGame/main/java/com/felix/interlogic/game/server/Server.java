@@ -8,22 +8,18 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.felix.socket.Message;
+
 public class Server {
-	private List<DataOutputStream> clients;
+	private List<GameRoom> games = new ArrayList<GameRoom>();
 	public static final int PORT = 6666;
 
-	public Server() {
-		this.clients = new ArrayList<DataOutputStream>();
+	public void sendAll(Message message) {
+		games.forEach(g -> g.sendAll(message));
 	}
 
-	public void sendAll(String str) {
-		for (DataOutputStream client : clients) {
-			try {
-				client.writeUTF(str);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	public void addGame(GameRoom gameRoom) {
+		this.games.add(gameRoom);
 	}
 
 	public void start() {
@@ -31,8 +27,9 @@ public class Server {
 		try {
 			serverSocket = new ServerSocket(PORT);
 			while (true) {
-				Socket client = serverSocket.accept();
-				OutputStream outs = client.getOutputStream();
+				Socket clientSocket = serverSocket.accept();
+				Client client = new Client(clientSocket);
+				
 				this.clients.add(new DataOutputStream(outs));
 				new ServerThread(this, client).start();
 			}

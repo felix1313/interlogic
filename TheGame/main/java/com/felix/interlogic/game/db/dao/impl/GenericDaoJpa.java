@@ -6,9 +6,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+
 import com.felix.interlogic.game.db.dao.GenericDao;
-import com.felix.interlogic.game.db.exception.DaoException;
 import com.felix.interlogic.game.db.util.HibernateUtil;
+import com.felix.interlogic.game.exception.DaoException;
 
 public abstract class GenericDaoJpa<T, PK extends Serializable> implements
 		GenericDao<T, PK> {

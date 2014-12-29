@@ -61,7 +61,7 @@ public class User implements Serializable{
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
-	public Set<UserGame> getUserGames() {
+	public Set<UserGame> getUserGames() {		
 		return userGames;
 	}
 

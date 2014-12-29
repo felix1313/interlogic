@@ -3,7 +3,7 @@ package com.felix.interlogic.game.db.dao;
 import java.io.Serializable;
 import java.util.List;
 
-import com.felix.interlogic.game.db.exception.DaoException;
+import com.felix.interlogic.game.exception.DaoException;
 
 public interface GenericDao<T, PK extends Serializable> {
 	T create(T t) throws DaoException;

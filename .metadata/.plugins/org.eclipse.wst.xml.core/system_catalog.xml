@@ -183,4 +183,38 @@
   <uri name="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200802" uri="jar:file:/home/felix/eclipse/plugins/org.eclipse.wst.standard.schemas_1.0.700.v201304171715.jar!/xsd/ws-securitypolicy.xsd"/>
   <system systemId="http://www.w3.org/2001/xml.xsd" uri="jar:file:/home/felix/eclipse/plugins/org.eclipse.xsd_2.10.0.v20140901-1055.jar!/cache/www.w3.org/2001/xml.xsd"/>
   <uri name="http://www.w3.org/2001/XMLSchema" uri="jar:file:/home/felix/eclipse/plugins/org.eclipse.xsd_2.10.0.v20140901-1055.jar!/cache/www.w3.org/2001/XMLSchema.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/attributes-1.2" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/attributes-1.2.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/application-2.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-application-2.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/application-client-2.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-application-client-2.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/connector-1.2" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-connector-1.2.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/credentialstore-1.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-credential-store-1.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/deployment/javabean-1.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-javabean-xmlattribute-1.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/web/jetty-2.0.2" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-jetty-2.0.2.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/web/jetty/config-1.0.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-jetty-config-1.0.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/loginconfig-2.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-login-config-2.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/deployment-1.2" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-module-1.2.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/naming-1.2" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-naming-1.2.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/ejb/openejb-2.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-openejb-2.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/security-1.2" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-security-1.2.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/security-2.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-security-2.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/subject-info-1.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-subject-info-1.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/web/tomcat-2.0.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-tomcat-2.0.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/web/tomcat/config-1.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-tomcat-config-1.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/web-2.0.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-web-2.0.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/plugins-1.3" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/plugins-1.3.xsd"/>
+  <uri name="http://openejb.apache.org/xml/ns/openejb-jar-2.2" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/openejb-jar-2.2.xsd"/>
+  <uri name="http://openejb.apache.org/xml/ns/pkgen-2.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/pkgen-2.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/geronimo-jaspi" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/geronimo-jaspi.xsd"/>
+  <uri name="http://www.osgi.org/xmlns/blueprint/v1.0.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/blueprint.xsd"/>
+  <uri name="http://java.sun.com/xml/ns/persistence" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.schemas_3.0.1.jar!/v30/persistence_2_0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/application-1.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/geronimo-application-1.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/application-client-1.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/geronimo-application-client-1.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/connector-1.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/geronimo-connector-1.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/deployment/javabean-1.0" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/geronimo-javabean-xmlattribute-1.0.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/loginconfig-1.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/geronimo-login-config-1.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/deployment-1.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/geronimo-module-1.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/naming-1.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/geronimo-naming-1.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/security-1.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/geronimo-security-1.1.xsd"/>
+  <uri name="http://geronimo.apache.org/xml/ns/j2ee/web-1.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/geronimo-web-1.1.xsd"/>
+  <uri name="http://www.openejb.org/xml/ns/openejb-jar-2.1" uri="jar:file:/home/felix/eclipse/plugins/org.apache.geronimo.st.v11.schemas_3.0.1.jar!/v11/openejb-jar-2.1.xsd"/>
 </catalog>

@@ -2,17 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="game" key="selection"/>
+		<item value="controller" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="controller"/>
+			<item value="SQL"/>
 			<item value="user"/>
 			<item value="User"/>
 			<item value="textPane"/>
 		</list>
 		<list key="replacehistory">
+			<item value="Dao"/>
 			<item value="game"/>
 			<item value="Game"/>
 			<item value="textArea"/>

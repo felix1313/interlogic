@@ -1,32 +1,51 @@
 package com.felix.interlogic.game.server;
 
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
+
+import com.felix.socket.Message;
+import com.felix.socket.MessageInputStream;
 
 public class ServerThread extends Thread {
 	private Server server;
-	private Socket clientSocket;
+	private Client client;
+	private GameRoom gameRoom;
 
-	public ServerThread(Server server, Socket clientSocket) {
+	public ServerThread(Server server, Client client) {
 		super();
 		this.server = server;
-		this.clientSocket = clientSocket;
+		this.client = client;
 	}
 
 	@Override
 	public void run() {
+		MessageInputStream in = null;
+
 		try {
-			DataInputStream in = new DataInputStream( clientSocket
-					.getInputStream());
+			in = new MessageInputStream(client.getSocket().getInputStream());
+			boolean createNewRoom = in.readBoolean();
 
+			if (createNewRoom == true) {
+				String password = in.readUTF();
+				this.gameRoom = new GameRoom(client, password);
+				server.addGame(gameRoom);
+				// TODO client.write();
+			} else {
+				Integer gameId=
+			}
 			while (true) {
-				String message = in.readUTF();
-
-				server.sendAll(message);
+				Message message = in.readMessage();
+				gameRoom.sendAll(message);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
