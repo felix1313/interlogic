@@ -1,6 +1,5 @@
 package com.felix.game.map;
 
-import java.awt.BorderLayout;
 import java.io.IOException;
 
 import com.felix.game.map.view.MapEditorController;
@@ -8,7 +7,6 @@ import com.felix.game.map.view.MapEditorController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 

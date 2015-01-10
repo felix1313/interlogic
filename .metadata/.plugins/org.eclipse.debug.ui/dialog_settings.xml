@@ -19,8 +19,8 @@
 		<item value="237" key="org.eclipse.debug.ui.DIALOG_SASH_WEIGHTS_1"/>
 	</section>
 	<section name="org.eclipse.debug.ui.SELECT_LAUNCH_SHORTCUT_DIALOG">
-		<item value="295" key="DIALOG_WIDTH"/>
+		<item value="275" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="441" key="DIALOG_HEIGHT"/>
+		<item value="421" key="DIALOG_HEIGHT"/>
 	</section>
 </section>
