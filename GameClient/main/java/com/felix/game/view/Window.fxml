@@ -6,51 +6,42 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.felix.game.view.WindowController">
-   <center>
-      <SplitPane dividerPositions="0.7621776504297995" prefHeight="468.0" prefWidth="700.0" BorderPane.alignment="CENTER">
-         <items>
-            <AnchorPane>
-               <children>
-                  <ScrollPane prefHeight="369.0" prefWidth="528.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <content>
-                        <Canvas fx:id="canvas" height="1024.0" onMouseClicked="#handleCanvasClick" width="1024.0" />
-                     </content>
-                  </ScrollPane>
-               </children>
-            </AnchorPane>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="466.0" prefWidth="148.0">
-               <children>
-                  <SplitPane dividerPositions="0.3460490463215259" layoutX="1.0" layoutY="51.0" orientation="VERTICAL" prefHeight="466.0" prefWidth="162.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <items>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-                     </items>
-                  </SplitPane>
-               </children>
-            </AnchorPane>
-         </items>
-      </SplitPane>
-   </center>
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
-</BorderPane>
+<AnchorPane prefHeight="400.0" prefWidth="700.0"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.felix.game.view.WindowController">
+	<SplitPane dividerPositions="0.7621776504297995" prefHeight="468.0"
+		prefWidth="700.0" BorderPane.alignment="CENTER">
+		<items>
+			<AnchorPane>
+				<children>
+					<ScrollPane prefHeight="369.0" prefWidth="528.0"
+						AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+						AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+						<content>
+							<Canvas fx:id="canvas" height="1024.0" onMouseClicked="#handleCanvasClick"
+								width="1024.0" />
+						</content>
+					</ScrollPane>
+				</children>
+			</AnchorPane>
+			<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="466.0"
+				prefWidth="148.0">
+				<children>
+					<SplitPane dividerPositions="0.3460490463215259" layoutX="1.0"
+						layoutY="51.0" orientation="VERTICAL" prefHeight="466.0"
+						prefWidth="162.0" AnchorPane.bottomAnchor="0.0"
+						AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+						AnchorPane.topAnchor="0.0">
+						<items>
+							<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0"
+								prefWidth="160.0" />
+							<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0"
+								prefWidth="160.0" />
+						</items>
+					</SplitPane>
+				</children>
+			</AnchorPane>
+		</items>
+	</SplitPane>
+
+</AnchorPane>
