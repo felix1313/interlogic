@@ -1,8 +1,9 @@
-package com.felix.socket;
+package com.felix.game.server.message;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+
 
 public class MessageOutputStream extends ObjectOutputStream {
 

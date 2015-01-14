@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.felix.game.exception.IncorrectPasswordException;
 import com.felix.game.model.Game;
+import com.felix.game.server.message.Message;
 import com.felix.game.util.PasswordUtil;
-import com.felix.socket.Message;
 
 public class GameRoom {
 	private Game game;
@@ -16,9 +16,8 @@ public class GameRoom {
 		game = new Game();
 	}
 
-	public GameRoom(Game game, List<Client> clients) {
+	public GameRoom(Game game) {
 		this.game = game;
-		this.clients = clients;
 	}
 
 	public void sendAll(Message message) {
@@ -36,6 +35,10 @@ public class GameRoom {
 			clients.add(client);
 		else
 			throw new IncorrectPasswordException();
+	}
+
+	public void removeClient(Client client) {
+		clients.remove(client);
 	}
 
 	public List<Client> getClients() {

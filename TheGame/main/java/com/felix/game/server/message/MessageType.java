@@ -1,4 +1,4 @@
-package com.felix.socket;
+package com.felix.game.server.message;
 
 import java.io.Serializable;
 
@@ -10,8 +10,11 @@ public enum MessageType implements Serializable{
 	OPERATION_SUCCESS,
 	INCORRECT_PASSWORD,
 	INVALID_USERNAME,
+	INVALID_GAMEID,
 	OPERATION_FAIL,
 	USER_REGISTER,
 	LOGIN,
 	EXIT;
+	
+
 }

@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class Game implements Serializable {
 	private Long gameId;
 	private String gamePassword;
-	public Set<UserGame> userGames = new HashSet<UserGame>();
+	transient public Set<UserGame> userGames = new HashSet<UserGame>();
 
 	public Game() {
 

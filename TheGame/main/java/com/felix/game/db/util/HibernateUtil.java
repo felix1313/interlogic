@@ -53,7 +53,9 @@ public class HibernateUtil {
 					.createEntityManagerFactory("com.felix.interlogic.game");
 		return entityManagerFactory;
 	}
-
+	synchronized public static void exit(){
+		getEntityManagerFactory().close();
+	}
 	synchronized public static EntityManager createEntityManager() {
 		return getEntityManagerFactory().createEntityManager();
 	}

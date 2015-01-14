@@ -1,28 +1,22 @@
 package com.felix.game;
 
-import javax.persistence.EntityManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
-import com.felix.game.db.dao.impl.GameDao;
-import com.felix.game.db.dao.impl.UnitDao;
 import com.felix.game.db.dao.impl.UserDao;
 import com.felix.game.db.util.HibernateUtil;
-import com.felix.game.model.Game;
-import com.felix.game.model.Unit;
-import com.felix.game.model.User;
-import com.felix.game.model.UserGame;
+import com.felix.game.exception.DaoException;
 
 public class Main {
 
 	public static void main(String[] args) {
-
+		PropertyConfigurator.configure("log4j.properties");
 		try {
-			
-			System.out.println(GameDao.instance().readAll());
-		} catch (Exception e) {
+			System.out.println(UserDao.instance().readByLogin("Vanya").getLogin());
+		} catch (DaoException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("rollback");
-		} finally {
-			HibernateUtil.getEntityManagerFactory().close();
 		}
+		HibernateUtil.exit();
 	}
 }

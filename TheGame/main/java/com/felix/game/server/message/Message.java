@@ -1,4 +1,4 @@
-package com.felix.socket;
+package com.felix.game.server.message;
 
 import java.io.Serializable;
 

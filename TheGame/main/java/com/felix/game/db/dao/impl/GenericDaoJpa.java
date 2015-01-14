@@ -51,11 +51,15 @@ public abstract class GenericDaoJpa<T, PK extends Serializable> implements
 				fetchCollections(res);
 			}
 		} catch (Exception e) {
-			em.getTransaction().rollback();
+			e.printStackTrace();
 		} finally {
 			em.close();
 		}
 		return res;
+	}
+
+	public T read(PK id) {
+		return read(id, false);
 	}
 
 	/**
@@ -102,8 +106,8 @@ public abstract class GenericDaoJpa<T, PK extends Serializable> implements
 	@Override
 	public List<T> readAll() {
 		EntityManager em = HibernateUtil.createEntityManager();
-		TypedQuery<T> query = em.createQuery("SELECT c FROM ?1 c", type);
-		query.setParameter(1, type.getName());
+		TypedQuery<T> query = em.createQuery("SELECT c FROM " + type.getName()
+				+ " c", type);
 		return query.getResultList();
 	}
 
