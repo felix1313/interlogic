@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.apache.log4j.PropertyConfigurator;
 
+import com.felix.game.socket.Server;
+import com.felix.game.view.GameLoadController;
 import com.felix.game.view.LoginController;
 import com.felix.game.view.RootController;
 import com.felix.game.view.WindowController;
@@ -19,6 +21,7 @@ public class Main extends Application {
 
 	private BorderPane rootPane;
 	private Stage primaryStage;
+	private int userId;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -48,7 +51,10 @@ public class Main extends Application {
 			AnchorPane loginPane = (AnchorPane) loader.load();
 			rootPane.setCenter(loginPane);
 			WindowController controller = loader.getController();
+			controller.setId(userId);
 			controller.init();
+			Server.instance().setController(controller);
+			Server.instance().start();
 			// primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -62,6 +68,21 @@ public class Main extends Application {
 			AnchorPane loginPane = (AnchorPane) loader.load();
 			rootPane.setCenter(loginPane);
 			LoginController controller = loader.getController();
+			controller.setMainApp(this);
+			// primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void loadGameLoadForm() {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("view/GameLoadForm.fxml"));
+		try {
+			AnchorPane loginPane = (AnchorPane) loader.load();
+			rootPane.setCenter(loginPane);
+			GameLoadController controller = loader.getController();
+			controller.setMainApp(this);
 			// primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -71,5 +92,13 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		PropertyConfigurator.configure("config/log4j.properties");
 		launch(args);
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 }

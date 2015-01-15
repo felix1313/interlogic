@@ -17,7 +17,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "user")
-public class User implements Serializable{
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 4094935353354522116L;
 	private Integer id;
 	private String login;
 	private String password;
@@ -61,7 +63,7 @@ public class User implements Serializable{
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
-	public Set<UserGame> getUserGames() {		
+	public Set<UserGame> getUserGames() {
 		return userGames;
 	}
 

@@ -1,5 +1,6 @@
 package com.felix.game.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,7 +14,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "unit")
-public class Unit {
+public class Unit implements Serializable {
+
+	private static final long serialVersionUID = -6554283840848380350L;
 	private Integer unitId;
 	private String name;
 	private Integer power;
@@ -23,6 +26,7 @@ public class Unit {
 	private Integer coefSpeed;
 	private Integer coefHp;
 	private Set<UserGame> userGames;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "unit_id", nullable = false, unique = true)
@@ -97,7 +101,7 @@ public class Unit {
 		this.coefHp = coefHp;
 	}
 
-	@OneToMany(fetch=FetchType.LAZY,mappedBy="unit")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unit")
 	public Set<UserGame> getUserGames() {
 		return userGames;
 	}
@@ -106,7 +110,6 @@ public class Unit {
 		this.userGames = userGames;
 	}
 
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -175,6 +178,5 @@ public class Unit {
 			return false;
 		return true;
 	}
-
 
 }

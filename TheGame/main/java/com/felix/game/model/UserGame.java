@@ -3,14 +3,11 @@ package com.felix.game.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "user_game", catalog = "the_game")
@@ -18,6 +15,8 @@ public class UserGame implements Serializable {
 
 	// @EmbeddedId
 	// UserGameId userGameId;
+
+	private static final long serialVersionUID = 2343610173032407177L;
 
 	@Id
 	@ManyToOne
@@ -39,6 +38,7 @@ public class UserGame implements Serializable {
 	private Integer locationX;
 	@Column(name = "location_y")
 	private Integer locationY;
+
 	public Unit getUnit() {
 		return unit;
 	}

@@ -2,6 +2,7 @@ package com.felix.game.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,25 +15,41 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.felix.game.util.PasswordUtil;
+
 @Entity
 @Table(name = "game")
 public class Game implements Serializable {
-	private Long gameId;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6417574237777065306L;
+	private Integer gameId;
 	private String gamePassword;
-	transient public Set<UserGame> userGames = new HashSet<UserGame>();
+	transient private Set<UserGame> userGames = new HashSet<UserGame>();
 
 	public Game() {
 
 	}
 
+	public Game(String password) {
+		this.gameId = new Random().nextInt();
+		this.gamePassword = password;
+	}
+
+	public Game(int id, String password) {
+		this.gameId = id;
+		this.gamePassword = password;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "game_id", unique = true, nullable = false)
-	public Long getGameId() {
+	public Integer getGameId() {
 		return gameId;
 	}
 
-	public void setGameId(Long gameId) {
+	public void setGameId(Integer gameId) {
 		this.gameId = gameId;
 	}
 

@@ -21,6 +21,8 @@ public class MessageInputStream extends ObjectInputStream {
 		return result;
 	}
 
+	
+	
 	public String readString() throws ClassCastException{
 		String result = null;
 		try {

@@ -2,19 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="markUnit" key="selection"/>
+		<item value="UNIT_MOVE" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="UNIT_MOVE"/>
+			<item value="moveUnit"/>
+			<item value="start"/>
+			<item value="Server.instance().start()"/>
 			<item value="markUnit"/>
 			<item value="brushSizeSlider.getValue()"/>
 			<item value="controller"/>
 			<item value="SQL"/>
-			<item value="user"/>
-			<item value="User"/>
-			<item value="textPane"/>
 		</list>
 		<list key="replacehistory">
 			<item value="brushSize"/>
@@ -27,8 +28,8 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="289" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="488" key="DIALOG_HEIGHT"/>
-		<item value="84" key="DIALOG_Y_ORIGIN"/>
-		<item value="181" key="DIALOG_X_ORIGIN"/>
+		<item value="432" key="DIALOG_HEIGHT"/>
+		<item value="225" key="DIALOG_Y_ORIGIN"/>
+		<item value="906" key="DIALOG_X_ORIGIN"/>
 	</section>
 </section>

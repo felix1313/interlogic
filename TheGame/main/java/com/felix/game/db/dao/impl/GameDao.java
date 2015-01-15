@@ -2,7 +2,7 @@ package com.felix.game.db.dao.impl;
 
 import com.felix.game.model.Game;
 
-public class GameDao extends GenericDaoJpa<Game, Long> {
+public class GameDao extends GenericDaoJpa<Game, Integer> {
 
 	private GameDao() {
 	};

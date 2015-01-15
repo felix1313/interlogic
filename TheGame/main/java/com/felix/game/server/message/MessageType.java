@@ -5,6 +5,7 @@ import java.io.Serializable;
 public enum MessageType implements Serializable{
 	CHAT_MESSAGE,
 	UNIT_MOVE,
+	UNIT_ADD,
 	GAME_START,
 	GAME_LOAD,
 	OPERATION_SUCCESS,
