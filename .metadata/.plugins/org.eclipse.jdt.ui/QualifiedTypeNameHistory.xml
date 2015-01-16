@@ -54,10 +54,10 @@
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="com.felix.game.socket.Server"/>
-<fullyQualifiedTypeName name="com.felix.game.dto.UserLocationDTO"/>
 <fullyQualifiedTypeName name="org.apache.log4j.Logger"/>
 <fullyQualifiedTypeName name="com.felix.game.model.UnitModel"/>
 <fullyQualifiedTypeName name="com.felix.game.server.message.Message"/>
 <fullyQualifiedTypeName name="com.felix.game.server.message.MessageType"/>
 <fullyQualifiedTypeName name="javafx.application.Platform"/>
+<fullyQualifiedTypeName name="com.felix.game.dto.UserLocationDTO"/>
 </qualifiedTypeNameHistroy>

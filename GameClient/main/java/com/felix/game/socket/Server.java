@@ -77,6 +77,12 @@ public class Server extends Thread {
 	public void moveUnit(UserLocationDTO targetLocation) {
 		log.info("ask server to move unit to " + targetLocation);
 		outputStream.write(new Message(MessageType.UNIT_MOVE, targetLocation));
+		try {
+			outputStream.reset();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -152,7 +152,12 @@ public class Client extends Thread {
 	public void run() {
 		while (true) {
 			Message message = inputStream.readMessage();
+			System.out.println(message);
 			switch (message.getMessageType()) {
+			case UNIT_MOVE:
+				moveUnit((UserLocationDTO) message.getData());
+				System.out.println((UserLocationDTO) message.getData());
+				break;
 			case USER_REGISTER:
 				registerUser((User) message.getData());
 				break;
@@ -165,10 +170,7 @@ public class Client extends Thread {
 			case GAME_START:
 				startGame((Game) message.getData());
 				break;
-			case UNIT_MOVE:
-				 moveUnit((UserLocationDTO) message.getData());
-				System.out.println((UserLocationDTO) message.getData());
-				break;
+
 			case EXIT:
 				this.exit();
 				break;
