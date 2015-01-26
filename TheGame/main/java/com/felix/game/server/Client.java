@@ -1,6 +1,7 @@
 package com.felix.game.server;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.Socket;
 
 import org.apache.log4j.Logger;
@@ -88,7 +89,7 @@ public class Client extends Thread {
 			else if (!gameRoom.passwordOK(game.getGamePassword())) {
 				sendFailureReport(MessageType.INCORRECT_PASSWORD);
 			} else {
-				sendSuccessReport();
+				sendSuccessReport(gameRoom.getGame());
 
 				gameRoom.addClient(this);
 			}
@@ -102,7 +103,8 @@ public class Client extends Thread {
 	private void startGame(Game game) {
 		try {
 			gameRoom = server.addGame(game);
-			sendSuccessReport();
+			System.out.println(gameRoom.getGame());
+			sendSuccessReport(gameRoom.getGame());
 			gameRoom.addClient(this);
 
 		} catch (Exception ex) {
@@ -127,6 +129,11 @@ public class Client extends Thread {
 
 	public void sendSuccessReport() {
 		this.outputStream.write(new Message(MessageType.OPERATION_SUCCESS));
+	}
+
+	public void sendSuccessReport(Serializable data) {
+		this.outputStream
+				.write(new Message(MessageType.OPERATION_SUCCESS, data));
 	}
 
 	public void write(Message m) {

@@ -1,8 +1,11 @@
 package com.felix.game.model;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,8 +17,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import com.felix.game.util.PasswordUtil;
+import com.felix.game.map.model.Map;
 
 @Entity
 @Table(name = "game")
@@ -26,14 +30,23 @@ public class Game implements Serializable {
 	private static final long serialVersionUID = 6417574237777065306L;
 	private Integer gameId;
 	private String gamePassword;
+	transient private String mapFilePath;
 	transient private Set<UserGame> userGames = new HashSet<UserGame>();
+	private Map map;
 
 	public Game() {
 
 	}
 
+	public Game(Game game) {
+		this.gameId = game.gameId;
+		this.gamePassword = game.gamePassword;
+		this.map = game.map;
+		this.mapFilePath = game.mapFilePath;
+		this.userGames = game.userGames;
+	}
+
 	public Game(String password) {
-		this.gameId = new Random().nextInt();
 		this.gamePassword = password;
 	}
 
@@ -113,6 +126,44 @@ public class Game implements Serializable {
 
 	public void setUserGames(Set<UserGame> userGames) {
 		this.userGames = userGames;
+	}
+
+	@Column(name = "map_filepath")
+	public String getMapFilePath() {
+		return mapFilePath;
+	}
+
+	public void setMapFilePath(String mapFilePath) {
+		this.mapFilePath = mapFilePath;
+	}
+
+	public void loadMap() throws FileNotFoundException, IOException,
+			ClassNotFoundException {
+		ObjectInputStream inp = new ObjectInputStream(new FileInputStream(
+				mapFilePath));
+		this.map = (Map) inp.readObject();
+		inp.close();
+	}
+
+	@Transient
+	public Map getMap() {
+		if (map == null)
+			try {
+				loadMap();
+			} catch (ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			}
+		return map;
+	}
+
+	public void setMap(Map map) {
+		this.map = map;
+	}
+
+	@Override
+	public String toString() {
+		return "Game [gameId=" + gameId + ", gamePassword=" + gamePassword
+				+ ", map=" + map + "]";
 	}
 
 }

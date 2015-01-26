@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import org.apache.log4j.PropertyConfigurator;
 
+import com.felix.game.model.Game;
 import com.felix.game.socket.Server;
 import com.felix.game.view.GameLoadController;
 import com.felix.game.view.LoginController;
-import com.felix.game.view.RootController;
 import com.felix.game.view.WindowController;
 
 import javafx.application.Application;
@@ -22,12 +22,14 @@ public class Main extends Application {
 	private BorderPane rootPane;
 	private Stage primaryStage;
 	private int userId;
+	private Game game;
 
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		initRootLayout();
 		loadLoginForm();
+		// loadGameLoadForm();
 		primaryStage.show();
 	}
 
@@ -52,7 +54,7 @@ public class Main extends Application {
 			rootPane.setCenter(loginPane);
 			WindowController controller = loader.getController();
 			controller.setId(userId);
-			controller.init();
+			controller.init(this);
 			Server.instance().setController(controller);
 			Server.instance().start();
 			// primaryStage.show();
@@ -100,5 +102,17 @@ public class Main extends Application {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
+
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
 	}
 }

@@ -1,14 +1,10 @@
 package com.felix.game.view;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.HashMap;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import com.felix.game.dto.UserLocationDTO;
+import com.felix.game.Main;
 import com.felix.game.map.model.Map;
 import com.felix.game.model.UnitModel;
 import com.felix.game.socket.Server;
@@ -23,13 +19,14 @@ import javafx.scene.paint.Color;
 
 public class WindowController {
 	@FXML
-	private Canvas canvas;
+	private Canvas canvasBack;
+	@FXML
+	private Canvas canvasFront;
 	private Map map;
 	private int brushCoef = 5;
 	private final Logger log = Logger.getLogger(getClass());
 	private HashMap<Integer, UnitModel> models = new HashMap<>();
 	private Integer me;
-
 	private AnimationTimer timer;
 
 	public void setId(int id) {
@@ -37,54 +34,45 @@ public class WindowController {
 		me = (id);
 	}
 
-	public void init() {
+	public void init(Main mainApp) {
 		log.info("windowcontroller init");
-		ObjectInputStream in = null;
-		try {
-			in = new ObjectInputStream(new FileInputStream(
-					"/home/felix/Desktop/sample2.map"));
-			this.map = (Map) in.readObject();
-			this.drawMap(canvas.getGraphicsContext2D());
-			// markUnit(unitX, unitY);
-			timer = new AnimationTimer() {
 
-				@Override
-				public void handle(long now) {
-					for (UnitModel model : models.values()) {
-						/*
-						 * if (unitX == targetX && unitY == targetY) {
-						 * this.stop(); return; }
-						 */
-						// System.out.println("tick");
-						Integer unitX = model.getUnitX();
-						Integer unitY = model.getUnitY();
-						Integer targetX = model.getTargetX();
-						Integer targetY = model.getTargetY();
-						repaintMap(unitX, unitY);
-						if (unitX < targetX)
-							unitX++;
-						else if (unitX > targetX)
-							unitX--;
+		this.map = mainApp.getGame().getMap();
+		mainApp.getPrimaryStage().setTitle(
+				"Game id: " + mainApp.getGame().getGameId());
+		this.drawMap(canvasBack.getGraphicsContext2D());
+		// markUnit(unitX, unitY);
+		timer = new AnimationTimer() {
 
-						if (unitY < targetY)
-							unitY++;
-						else if (unitY > targetY)
-							unitY--;
-						model.setUnitX(unitX);
-						model.setUnitY(unitY);
-						WindowController.this.markUnit(model);
-					}
+			@Override
+			public void handle(long now) {
+				for (UnitModel model : models.values()) {
+					/*
+					 * if (unitX == targetX && unitY == targetY) { this.stop();
+					 * return; }
+					 */
+					// System.out.println("tick");
+					Integer unitX = model.getUnitX();
+					Integer unitY = model.getUnitY();
+					Integer targetX = model.getTargetX();
+					Integer targetY = model.getTargetY();
+					repaintMap(unitX, unitY);
+					if (unitX < targetX)
+						unitX++;
+					else if (unitX > targetX)
+						unitX--;
+
+					if (unitY < targetY)
+						unitY++;
+					else if (unitY > targetY)
+						unitY--;
+					model.setUnitX(unitX);
+					model.setUnitY(unitY);
+					WindowController.this.markUnit(model);
 				}
-			};
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				in.close();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-		}
+		};
+
 	}
 
 	public void drawMap(GraphicsContext gc) {
@@ -117,9 +105,10 @@ public class WindowController {
 		log.info("canvas click");
 		double x = ev.getX();
 		double y = ev.getY();
-		System.out.println(x + " " + y);
+
 		UnitModel model = models.get(me);
-		// repaintMap(model.getTargetX(), model.getTargetY());
+		repaintMap(model.getTargetX(), model.getTargetY());
+
 		model.setTargetX((int) (x - ((int) (x + 0.0001)) % brushCoef));
 		model.setTargetY((int) (y - ((int) (y + 0.0001)) % brushCoef));
 		// model.setTargetX((int) (x + 0.000001));
@@ -134,7 +123,7 @@ public class WindowController {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				GraphicsContext gc = canvas.getGraphicsContext2D();
+				GraphicsContext gc = canvasFront.getGraphicsContext2D();
 				gc.setFill(Color.BLACK);
 				gc.fillOval(x, y, brushCoef, brushCoef);
 			}
@@ -145,7 +134,7 @@ public class WindowController {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				GraphicsContext gc = canvas.getGraphicsContext2D();
+				GraphicsContext gc = canvasFront.getGraphicsContext2D();
 				gc.setFill(m.getColor());
 				gc.fillOval(m.getUnitX(), m.getUnitY(), brushCoef, brushCoef);
 			}
@@ -157,10 +146,8 @@ public class WindowController {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				GraphicsContext gc = canvas.getGraphicsContext2D();
-				gc.setFill(Map.numToColor(map.getMap()[x / brushCoef][y
-						/ brushCoef]));
-				gc.fillRect(x, y, brushCoef, brushCoef);
+				GraphicsContext gc = canvasFront.getGraphicsContext2D();
+				gc.clearRect(x, y, brushCoef, brushCoef);
 			}
 		});
 

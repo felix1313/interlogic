@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.felix.game.dto.UserLocationDTO;
-import com.felix.game.exception.IncorrectPasswordException;
 import com.felix.game.model.Game;
 import com.felix.game.model.UserGame;
 import com.felix.game.server.message.Message;
@@ -22,6 +21,7 @@ public class GameRoom {
 	public GameRoom(Game game) {
 		this.game = new Game();
 		this.game.setGameId(game.getGameId());
+		this.game.setMap(game.getMap());
 		this.game.setGamePassword(PasswordUtil.instance().encode(
 				game.getGamePassword()));
 	}

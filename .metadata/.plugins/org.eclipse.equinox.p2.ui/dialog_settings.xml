@@ -22,14 +22,14 @@
 		<item value="200" key="DetailsSashWeight"/>
 		<item value="400" key="NameColumnWidth"/>
 		<item value="200" key="VersionColumnWidth"/>
-		<item value="416" key="IDColumnWidth"/>
+		<item value="200" key="IDColumnWidth"/>
 		<item value="800" key="ListSashWeight"/>
 	</section>
 	<section name="org.eclipse.equinox.internal.p2.ui.dialogs.InstallWizard.WizardSettings">
-		<item value="1028" key="DIALOG_WIDTH"/>
-		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="716" key="DIALOG_HEIGHT"/>
-		<item value="0" key="DIALOG_Y_ORIGIN"/>
+		<item value="1063" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="692" key="DIALOG_HEIGHT"/>
+		<item value="8" key="DIALOG_Y_ORIGIN"/>
 		<item value="136" key="DIALOG_X_ORIGIN"/>
 	</section>
 </section>

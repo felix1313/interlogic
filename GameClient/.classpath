@@ -6,6 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/interlogic-map-editor.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="/home/felix/java/lib/the-game.jar"/>
+	<classpathentry kind="lib" path="E:/java/lib/the-game.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 
 import com.felix.game.db.dao.impl.GameDao;
+import com.felix.game.exception.DaoException;
 import com.felix.game.model.Game;
 import com.felix.game.server.message.Message;
 
@@ -22,10 +23,12 @@ public class Server {
 	}
 
 	public GameRoom addGame(Game game) {
-		if (this.games.containsKey(game.getGameId())) {
-			log.error("duplicate key");
-			return null;
+		try {
+			GameDao.instance().create(game);
+		} catch (DaoException e) {
+			log.error("failed to store in db");
 		}
+		System.out.println(game);
 		this.games.put(game.getGameId(), new GameRoom(game));
 		return this.games.get(game.getGameId());
 	}

@@ -167,7 +167,7 @@ public class MapEditorController {
 
 	@FXML
 	private void handleSliderMove() {
-		brushSize = (int)(brushSizeSlider.getValue()+1e-11);
+		brushSize = (int) (brushSizeSlider.getValue() + 1e-11);
 		rectangle.setWidth(brushSize * brushCoef);
 		rectangle.setHeight(brushSize * brushCoef);
 		System.out.println(brushSize);

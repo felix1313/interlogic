@@ -59,19 +59,18 @@ public class Server extends Thread {
 		return resp;
 	}
 
-	public MessageType joinGame(Integer gameId, String pass) {
+	public Message joinGame(Integer gameId, String pass) {
 		outputStream.write(new Message(MessageType.GAME_LOAD, new Game(gameId,
 				pass)));
 		Message resp = inputStream.readMessage();
-		return resp.getMessageType();
+		return resp;
 	}
 
-	public MessageType createGame(String pass) {
-		Game game = new Game(pass);
+	public Message createGame(Game game) {
 		outputStream.write(new Message(MessageType.GAME_START, game));
 		log.info("created game id:" + game.getGameId());
 		Message resp = inputStream.readMessage();
-		return resp.getMessageType();
+		return resp;
 	}
 
 	public void moveUnit(UserLocationDTO targetLocation) {
