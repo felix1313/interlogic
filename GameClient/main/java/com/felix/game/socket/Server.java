@@ -3,10 +3,12 @@ package com.felix.game.socket;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import javafx.application.Platform;
 
 import org.apache.log4j.Logger;
 
 import com.felix.game.dto.UserLocationDTO;
+import com.felix.game.model.ChatMessage;
 import com.felix.game.model.Game;
 import com.felix.game.model.User;
 import com.felix.game.server.message.Message;
@@ -84,6 +86,11 @@ public class Server extends Thread {
 		}
 	}
 
+	public void sendMessage(ChatMessage message) {
+		log.info("ask server to send chat message");
+		outputStream.write(new Message(MessageType.CHAT_MESSAGE, message));
+	}
+
 	@Override
 	public void run() {
 		while (true) {
@@ -95,6 +102,12 @@ public class Server extends Thread {
 				break;
 			case UNIT_ADD:
 				controller.addUnit((UserLocationDTO) message.getData());
+				break;
+			case CHAT_MESSAGE:
+				Platform.runLater(() -> {
+					controller.chat((ChatMessage) message.getData());
+				});
+				log.info("chat message received");
 				break;
 			default:
 				log.error("unknown command " + message.getMessageType());

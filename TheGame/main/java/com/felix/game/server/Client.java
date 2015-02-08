@@ -155,6 +155,11 @@ public class Client extends Thread {
 				getUser().getId());
 	}
 
+	private void sendMessage(Message message) {
+		log.info("chat message");
+		this.gameRoom.sendAll(message, user.getId());
+	}
+
 	@Override
 	public void run() {
 		while (true) {
@@ -163,7 +168,6 @@ public class Client extends Thread {
 			switch (message.getMessageType()) {
 			case UNIT_MOVE:
 				moveUnit((UserLocationDTO) message.getData());
-				System.out.println((UserLocationDTO) message.getData());
 				break;
 			case USER_REGISTER:
 				registerUser((User) message.getData());
@@ -177,7 +181,9 @@ public class Client extends Thread {
 			case GAME_START:
 				startGame((Game) message.getData());
 				break;
-
+			case CHAT_MESSAGE:
+				sendMessage(message);
+				break;
 			case EXIT:
 				this.exit();
 				break;

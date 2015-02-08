@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.felix.game.model.Game;
+import com.felix.game.model.User;
 import com.felix.game.socket.Server;
 import com.felix.game.view.GameLoadController;
 import com.felix.game.view.LoginController;
@@ -21,7 +22,7 @@ public class Main extends Application {
 
 	private BorderPane rootPane;
 	private Stage primaryStage;
-	private int userId;
+	private User user;
 	private Game game;
 
 	@Override
@@ -53,7 +54,7 @@ public class Main extends Application {
 			AnchorPane loginPane = (AnchorPane) loader.load();
 			rootPane.setCenter(loginPane);
 			WindowController controller = loader.getController();
-			controller.setId(userId);
+			controller.setId(user.getId());
 			controller.init(this);
 			Server.instance().setController(controller);
 			Server.instance().start();
@@ -97,11 +98,15 @@ public class Main extends Application {
 	}
 
 	public int getUserId() {
-		return userId;
+		return user.getId();
 	}
 
 	public void setUserId(int userId) {
-		this.userId = userId;
+		this.user.setId(userId);
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Stage getPrimaryStage() {
@@ -114,5 +119,9 @@ public class Main extends Application {
 
 	public void setGame(Game game) {
 		this.game = game;
+	}
+
+	public User getUser() {
+		return user;
 	}
 }

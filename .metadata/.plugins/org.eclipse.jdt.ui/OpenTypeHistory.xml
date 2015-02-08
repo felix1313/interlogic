@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <typeInfoHistroy>
-<typeInfo handle="=TheGame/lib\/hibernate\/hibernate-entitymanager-4.3.7.Final.jar&lt;org.hibernate.jpa.internal.schemagen(GenerationTarget.class[GenerationTarget" modifiers="1536" timestamp="1417644273552"/>
-<typeInfo handle="=TheGame/main\/java&lt;com.felix.game.db.dao.impl{UserDao.java[UserDao" modifiers="1" timestamp="1421231952411"/>
-<typeInfo handle="=TheGame/main\/java&lt;com.felix.game.util{PasswordUtil.java[PasswordUtil" modifiers="1" timestamp="1420910636628"/>
+<typeInfo handle="=TheGame/lib\/hibernate\/hibernate-entitymanager-4.3.7.Final.jar&lt;org.hibernate.jpa.internal.schemagen(GenerationTarget.class[GenerationTarget" modifiers="1536" timestamp="1417644273000"/>
+<typeInfo handle="=TheGame/main\/java&lt;com.felix.game.db.dao.impl{UserDao.java[UserDao" modifiers="1" timestamp="1421231952000"/>
+<typeInfo handle="=TheGame/main\/java&lt;com.felix.game.util{PasswordUtil.java[PasswordUtil" modifiers="1" timestamp="1420910636000"/>
 </typeInfoHistroy>

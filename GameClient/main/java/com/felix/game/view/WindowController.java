@@ -1,11 +1,14 @@
 package com.felix.game.view;
 
+import java.util.Date;
 import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 
 import com.felix.game.dto.UserLocationDTO;
 import com.felix.game.Main;
 import com.felix.game.map.model.Map;
+import com.felix.game.model.ChatMessage;
 import com.felix.game.model.UnitModel;
 import com.felix.game.socket.Server;
 
@@ -14,6 +17,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
@@ -22,12 +26,17 @@ public class WindowController {
 	private Canvas canvasBack;
 	@FXML
 	private Canvas canvasFront;
+	@FXML
+	private TextArea messageInput;
+	@FXML
+	private TextArea messageOutput;
 	private Map map;
 	private int brushCoef = 5;
 	private final Logger log = Logger.getLogger(getClass());
 	private HashMap<Integer, UnitModel> models = new HashMap<>();
 	private Integer me;
 	private AnimationTimer timer;
+	private Main mainApp;
 
 	public void setId(int id) {
 		log.info("my id=" + id);
@@ -36,7 +45,7 @@ public class WindowController {
 
 	public void init(Main mainApp) {
 		log.info("windowcontroller init");
-
+		this.mainApp = mainApp;
 		this.map = mainApp.getGame().getMap();
 		mainApp.getPrimaryStage().setTitle(
 				"Game id: " + mainApp.getGame().getGameId());
@@ -151,5 +160,20 @@ public class WindowController {
 			}
 		});
 
+	}
+
+	@FXML
+	private void handleMessageSend() {
+		String text = messageInput.getText();
+		ChatMessage message = new ChatMessage(text, mainApp.getUser()
+				.getLogin(), new Date());
+		chat(message);
+		messageInput.setText("");
+		Server.instance().sendMessage(message);
+	}
+
+	public void chat(ChatMessage data) {
+		messageOutput.appendText("[" + data.getAuthor() + "]: "
+				+ data.getText() + "\r\n");
 	}
 }

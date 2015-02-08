@@ -3,6 +3,7 @@ package com.felix.game.view;
 import org.apache.log4j.Logger;
 
 import com.felix.game.Main;
+import com.felix.game.model.User;
 import com.felix.game.server.message.Message;
 import com.felix.game.server.message.MessageType;
 import com.felix.game.socket.Server;
@@ -39,6 +40,7 @@ public class LoginController {
 				passText.getText());
 		if (res.getMessageType() == MessageType.OPERATION_SUCCESS) {
 			log.info("login success");
+			mainApp.setUser(new User(loginText.getText(), passText.getText()));
 			mainApp.setUserId((int) res.getData());
 			mainApp.loadGameLoadForm();
 		} else
