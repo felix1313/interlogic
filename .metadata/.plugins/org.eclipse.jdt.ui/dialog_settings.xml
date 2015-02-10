@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item value="E:\java\lib" key="org.eclipse.jdt.ui.lastextjar"/>
+	<item value="/home/felix/java/workspace/interlogic/TheGame/lib" key="org.eclipse.jdt.ui.lastextjar"/>
 	<item value="filter_imports;" key="filters_last_used"/>
 	<section name="SelfEncapsulateFieldWizard">
 		<item value="false" key="GenerateJavadoc"/>
@@ -68,11 +68,11 @@
 		<item value="false" key="JarManifestWizardPage.SAVE_MANIFEST"/>
 		<item value="false" key="JarPackageWizardPage.EXPORT_OUTPUT_FOLDER"/>
 		<list key="JarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="GameClient/lib/interlogic-map-editor.jar"/>
+			<item value="GameClient/lib/game-server.jar"/>
+			<item value="TheGame/lib/map-editor.jar"/>
 			<item value="E:\java\lib\the-game.jar"/>
 			<item value="E:\java\lib\map editor.jar"/>
-			<item value="/home/felix/java/lib/the-game.jar"/>
-			<item value="/home/felix/java/lib/server-util.jar"/>
-			<item value="/home/felix/java/lib/interlogic-map-editor.jar"/>
 		</list>
 	</section>
 	<section name="JavaElementSearchActions">
@@ -87,9 +87,9 @@
 		<item value="false" key="OmitCallToSuper"/>
 	</section>
 	<section name="DialogBounds_SuperInterfaceSelectionDialog">
-		<item value="373" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="549" key="DIALOG_HEIGHT"/>
+		<item value="370" key="DIALOG_WIDTH"/>
+		<item value="1|Noto Sans|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="629" key="DIALOG_HEIGHT"/>
 		<item value="120" key="DIALOG_X_ORIGIN"/>
 		<item value="0" key="DIALOG_Y_ORIGIN"/>
 	</section>
@@ -127,7 +127,7 @@
 	</section>
 	<section name="org.eclipse.jdt.internal.ui.dialogs.OpenTypeSelectionDialog2">
 		<item value="true" key="ShowStatusLine"/>
-		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History/&gt;" key="History"/>
+		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0A;&lt;History/&gt;" key="History"/>
 		<section name="DialogBoundsSettings">
 			<item value="600" key="DIALOG_WIDTH"/>
 			<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>

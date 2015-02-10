@@ -2,6 +2,7 @@ package com.felix.game.map.model;
 
 import java.io.Serializable;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Map implements Serializable {
@@ -66,5 +67,16 @@ public class Map implements Serializable {
 		if (num == 2)
 			c = Color.BLUE;
 		return c;
+	}
+
+	public void drawMap(GraphicsContext gc, int zoom) {
+
+		for (int i = 0; i < getHeight(); i++)
+			for (int j = 0; j < getWidth(); j++) {
+				int type = getMap()[i][j];
+				Color c = Map.numToColor(type);
+				gc.setFill(c);
+				gc.fillRect(i * zoom, j * zoom, zoom, zoom);
+			}
 	}
 }

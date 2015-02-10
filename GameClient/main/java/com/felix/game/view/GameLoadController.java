@@ -82,7 +82,6 @@ public class GameLoadController {
 			log.info("creating game...");
 			Game game = new Game(passTextCreate.getText());
 			game.setMap(map);
-			System.out.println(map);
 			res = Server.instance().createGame(game);
 			if (res.getMessageType() == MessageType.OPERATION_SUCCESS) {
 				log.info("game loaded! ");
@@ -93,25 +92,12 @@ public class GameLoadController {
 				log.warn("failed to load( " + res);
 
 		} else {
-			if (!gameLoaded)
-				if (handleConnectClick() == true) {
-					mainApp.loadGameForm();
-				}
-			;
+			if (gameLoaded || handleConnectClick())
+
+				mainApp.loadGameForm();
+
 		}
 
-	}
-
-	public void drawMap(Map map) {
-		GraphicsContext gc = canvas.getGraphicsContext2D();
-		int brushCoef = 1;
-		for (int i = 0; i < map.getHeight(); i++)
-			for (int j = 0; j < map.getWidth(); j++) {
-				int type = map.getMap()[i][j];
-				Color c = Map.numToColor(type);
-				gc.setFill(c);
-				gc.fillRect(i * brushCoef, j * brushCoef, brushCoef, brushCoef);
-			}
 	}
 
 	@FXML
@@ -141,7 +127,7 @@ public class GameLoadController {
 			try {
 				in = new ObjectInputStream(new FileInputStream(file));
 				map = (Map) in.readObject();
-				drawMap(map);
+				map.drawMap(canvas.getGraphicsContext2D(), 1);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
@@ -172,6 +158,7 @@ public class GameLoadController {
 			log.info("connection success");
 			Game game = (Game) res.getData();
 			this.map = game.getMap();
+			map.drawMap(this.canvas.getGraphicsContext2D(), 1);
 			mainApp.setGame(game);
 			gameLoaded = true;
 			return true;

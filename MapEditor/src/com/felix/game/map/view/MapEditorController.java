@@ -17,11 +17,9 @@ import com.felix.game.map.model.Map;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 
@@ -55,7 +53,7 @@ public class MapEditorController {
 	private void handleNewMap() {
 
 		map = new Map();
-		drawMap(canvas.getGraphicsContext2D());
+		map.drawMap(canvas.getGraphicsContext2D(), brushCoef);
 	}
 
 	@FXML
@@ -106,7 +104,7 @@ public class MapEditorController {
 			try {
 				in = new ObjectInputStream(new FileInputStream(file));
 				map = (Map) in.readObject();
-				drawMap(canvas.getGraphicsContext2D());
+				map.drawMap(canvas.getGraphicsContext2D(), brushCoef);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
@@ -133,17 +131,6 @@ public class MapEditorController {
 			cursorType = 2;
 		}
 		rectangle.setFill(Map.numToColor(cursorType));
-	}
-
-	public void drawMap(GraphicsContext gc) {
-
-		for (int i = 0; i < map.getHeight(); i++)
-			for (int j = 0; j < map.getWidth(); j++) {
-				int type = map.getMap()[i][j];
-				Color c = Map.numToColor(type);
-				gc.setFill(c);
-				gc.fillRect(i * brushCoef, j * brushCoef, brushCoef, brushCoef);
-			}
 	}
 
 	@FXML

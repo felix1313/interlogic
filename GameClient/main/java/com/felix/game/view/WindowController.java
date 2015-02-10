@@ -2,7 +2,6 @@ package com.felix.game.view;
 
 import java.util.Date;
 import java.util.HashMap;
-
 import org.apache.log4j.Logger;
 
 import com.felix.game.dto.UserLocationDTO;
@@ -11,8 +10,8 @@ import com.felix.game.map.model.Map;
 import com.felix.game.model.ChatMessage;
 import com.felix.game.model.UnitModel;
 import com.felix.game.socket.Server;
+import com.felix.game.util.Lock;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -21,7 +20,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-public class WindowController {
+public class WindowController implements Runnable {
+	private final int DELAY = 25;
 	@FXML
 	private Canvas canvasBack;
 	@FXML
@@ -35,8 +35,9 @@ public class WindowController {
 	private final Logger log = Logger.getLogger(getClass());
 	private HashMap<Integer, UnitModel> models = new HashMap<>();
 	private Integer me;
-	private AnimationTimer timer;
 	private Main mainApp;
+	private Boolean needsToMove = false;
+	private Lock lock = new Lock();
 
 	public void setId(int id) {
 		log.info("my id=" + id);
@@ -49,57 +50,46 @@ public class WindowController {
 		this.map = mainApp.getGame().getMap();
 		mainApp.getPrimaryStage().setTitle(
 				"Game id: " + mainApp.getGame().getGameId());
-		this.drawMap(canvasBack.getGraphicsContext2D());
+		map.drawMap(canvasBack.getGraphicsContext2D(), brushCoef);
 		// markUnit(unitX, unitY);
-		timer = new AnimationTimer() {
-
-			@Override
-			public void handle(long now) {
-				for (UnitModel model : models.values()) {
-					/*
-					 * if (unitX == targetX && unitY == targetY) { this.stop();
-					 * return; }
-					 */
-					// System.out.println("tick");
-					Integer unitX = model.getUnitX();
-					Integer unitY = model.getUnitY();
-					Integer targetX = model.getTargetX();
-					Integer targetY = model.getTargetY();
-					repaintMap(unitX, unitY);
-					if (unitX < targetX)
-						unitX++;
-					else if (unitX > targetX)
-						unitX--;
-
-					if (unitY < targetY)
-						unitY++;
-					else if (unitY > targetY)
-						unitY--;
-					model.setUnitX(unitX);
-					model.setUnitY(unitY);
-					WindowController.this.markUnit(model);
-				}
-			}
-		};
-
+		new Thread(this).start();
 	}
 
-	public void drawMap(GraphicsContext gc) {
+	public boolean updateMap() {
+		boolean moved = false;
+		for (UnitModel model : models.values()) {
+			System.out.println("tick");
+			Integer unitX = model.getUnitX();
+			Integer unitY = model.getUnitY();
+			Integer targetX = model.getTargetX();
+			Integer targetY = model.getTargetY();
+			if (model.needsToMove())
+				moved = true;
+			else
+				continue;
+			repaintMap(unitX, unitY);
+			if (unitX < targetX)
+				unitX++;
+			else if (unitX > targetX)
+				unitX--;
 
-		for (int i = 0; i < map.getHeight(); i++)
-			for (int j = 0; j < map.getWidth(); j++) {
-				int type = map.getMap()[i][j];
-				Color c = Map.numToColor(type);
-				gc.setFill(c);
-				gc.fillRect(i * brushCoef, j * brushCoef, brushCoef, brushCoef);
-			}
+			if (unitY < targetY)
+				unitY++;
+			else if (unitY > targetY)
+				unitY--;
+			model.setUnitX(unitX);
+			model.setUnitY(unitY);
+			markUnit(model);
+		}
+		return moved;
 	}
 
 	public void move(UserLocationDTO targetLocation) {
 		models.get(targetLocation.getUserId()).setUserLocationDTO(
 				targetLocation);
-		System.out.println(models);
-		timer.start();
+		// System.out.println(models);
+		needsToMove = true;
+		lock.unlock();
 	}
 
 	public void addUnit(UserLocationDTO locationDTO) {
@@ -123,7 +113,8 @@ public class WindowController {
 		// model.setTargetX((int) (x + 0.000001));
 		// model.setTargetY((int) (y + 0.000001));
 		markTarget(model.getTargetX(), model.getTargetY());
-		timer.start();
+		needsToMove = true;
+		lock.unlock();
 		Server.instance().moveUnit(model.getUserLocationDTO());
 	}
 
@@ -148,7 +139,6 @@ public class WindowController {
 				gc.fillOval(m.getUnitX(), m.getUnitY(), brushCoef, brushCoef);
 			}
 		});
-
 	}
 
 	private void repaintMap(int x, int y) {
@@ -175,5 +165,35 @@ public class WindowController {
 	public void chat(ChatMessage data) {
 		messageOutput.appendText("[" + data.getAuthor() + "]: "
 				+ data.getText() + "\r\n");
+	}
+
+	@Override
+	public void run() {
+		long beforeTime, timeDiff, sleep;
+
+		while (true) {
+
+			while (needsToMove == false) {
+				try {
+					lock.lock();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} finally {
+					lock.unlock();
+				}
+			}
+
+			beforeTime = System.currentTimeMillis();
+			needsToMove = updateMap();
+			timeDiff = System.currentTimeMillis() - beforeTime;
+			sleep = DELAY - timeDiff;
+			if (sleep < 0)
+				sleep = 2;
+			try {
+				Thread.sleep(sleep);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

@@ -71,7 +71,7 @@
                                     </Label>
             								<TextField fx:id="gameIdText" GridPane.columnIndex="1" />
                                     <PasswordField fx:id="passTextJoin" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <Button mnemonicParsing="false" text="Connect" GridPane.rowIndex="2" />
+                                    <Button mnemonicParsing="false" onAction="#handleConnectClick" text="Connect" GridPane.rowIndex="2" />
                                  </children>
                               </GridPane>
                            </content>
