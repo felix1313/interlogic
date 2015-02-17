@@ -1,30 +1,55 @@
 package com.felix.game.model;
 
+import java.util.List;
+
+import javafx.application.Platform;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import com.felix.game.dto.UserLocationDTO;
+import com.felix.game.map.model.Location;
 
 public class UnitModel {
-	private UserLocationDTO userLocationDTO;
+	private static final int UNIT_SIZE = 5;
+	private int userId;
+	private Location targetLocation;
+	private UnitMove movingTask;
 	private Color color;
-	private int unitX, unitY;
+	private Location location;
 
 	public UnitModel() {
 	}
 
 	public int getId() {
-		return userLocationDTO.getUserId();
+		return userId;
+	}
+
+	public void setId(int id) {
+		userId = id;
+	}
+
+	public void startMovement(List<Location> path, GraphicsContext gc, int brush) {
+		stopMoving();
+		this.movingTask = new UnitMove(this, path, gc, brush);
+		new Thread(movingTask).start();
+	}
+
+	public void stopMoving() {
+		if (movingTask != null)
+			movingTask.stop();
 	}
 
 	public UnitModel(UserLocationDTO userLocationDTO) {
 		color = UnitModel.getRandomColor();
-		this.userLocationDTO = userLocationDTO;
-		this.unitX = getTargetX();
-		this.unitY = getTargetY();
+		setId(userLocationDTO.getUserId());
+		setTargetLocation(new Location(userLocationDTO.getLocationX(),
+				userLocationDTO.getLocationY()));
+		this.location = new Location(userLocationDTO.getLocationX(),
+				userLocationDTO.getLocationY());
 	}
 
 	public boolean needsToMove() {
-		return getTargetX() != getUnitX() || getTargetY() != getUnitY();
+		return !getLocation().equals(targetLocation);
 	}
 
 	private static Color getRandomColor() {
@@ -40,51 +65,148 @@ public class UnitModel {
 	}
 
 	public int getUnitX() {
-		return unitX;
-	}
-
-	public void setUnitX(int unitX) {
-		this.unitX = unitX;
+		return location.getX();
 	}
 
 	public int getUnitY() {
-		return unitY;
+		return location.getY();
 	}
 
-	public void setUnitY(int unitY) {
-		this.unitY = unitY;
+
+	public void paintLocation(GraphicsContext gc) {
+		int x = getUnitX();
+		int y = getUnitY();
+		Platform.runLater(() -> {
+			gc.setFill(getColor());
+			gc.fillOval(x, y, UNIT_SIZE, UNIT_SIZE);
+		});
 	}
 
-	public int getTargetY() {
-		return userLocationDTO.getLocationY();
+	public void paintTarget(GraphicsContext gc) {
+		int x = getTargetX();
+		int y = getTargetY();
+		gc.setFill(Color.BLACK);
+		gc.fillOval(x, y, UNIT_SIZE, UNIT_SIZE);
 	}
 
-	public void setTargetY(int unitY) {
-		this.userLocationDTO.setLocationY(unitY);
+	public void clearLocation(GraphicsContext gc) {
+		int x = getUnitX();
+		int y = getUnitY();
+		Platform.runLater(() -> gc.clearRect(x, y, UNIT_SIZE, UNIT_SIZE));
 	}
 
-	public int getTargetX() {
-		return userLocationDTO.getLocationX();
+	public void clearTarget(GraphicsContext gc) {
+		int x = getTargetX();
+		int y = getTargetY();
+		Platform.runLater(() -> gc.clearRect(x, y, UNIT_SIZE, UNIT_SIZE));
 	}
 
-	public void setTargetX(int unitX) {
-		this.userLocationDTO.setLocationX(unitX);
+	private int getTargetX() {
+		return getTargetLocation().getX();
 	}
 
-	public UserLocationDTO getUserLocationDTO() {
-		return userLocationDTO;
+	private int getTargetY() {
+		return getTargetLocation().getY();
 	}
 
-	public void setUserLocationDTO(UserLocationDTO userLocationDTO) {
-		this.userLocationDTO = userLocationDTO;
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	public void move(Location newLocation, GraphicsContext gc) {
+		clearLocation(gc);
+		setLocation(newLocation);
+		paintLocation(gc);
+	}
+
+	public Location getTargetLocation() {
+		return targetLocation;
+	}
+
+	public void setTargetLocation(Location targetLocation) {
+		this.targetLocation = targetLocation;
+	}
+
+	public class UnitMove implements Runnable {
+
+		private List<Location> path;
+		private UnitModel unit;
+		private GraphicsContext gc;
+		private static final int DELAY = 25;
+		private int brushCoef;
+		private boolean isStopped;
+
+		public void stop() {
+			isStopped = true;
+		}
+
+		public UnitMove(UnitModel unit, List<Location> path,
+				GraphicsContext gc, int brushCoef) {
+			this.path = path;
+			this.unit = unit;
+			this.gc = gc;
+			this.brushCoef = brushCoef;
+		}
+
+		@Override
+		public void run() {
+			long beforeTime, timeDiff, sleep;
+
+			for (Location point : path) {
+				if (isStopped)
+					break;
+				Location scaledPoint = point.zoomIn(brushCoef);
+				while (!isStopped
+						&& unit.getLocation().equals(scaledPoint) == false) {
+					beforeTime = System.currentTimeMillis();
+					boolean diag;
+					if (scaledPoint.getX() != unit.getLocation().getX()
+							&& scaledPoint.getY() != unit.getLocation().getY())
+						diag = true;
+					else
+						diag = false;
+
+					sleep = DELAY;
+					if (diag)
+						sleep *= 1.414;
+
+					int newX = unit.getLocation().getX();
+					if (scaledPoint.getX() < unit.getLocation().getX())
+						newX--;
+					else if (scaledPoint.getX() > unit.getLocation().getX())
+						newX++;
+					int newY = unit.getLocation().getY();
+					if (scaledPoint.getY() < unit.getLocation().getY())
+						newY--;
+					else if (scaledPoint.getY() > unit.getLocation().getY())
+						newY++;
+
+					Location newLocation = new Location(newX, newY);
+					unit.move(newLocation, gc);
+					timeDiff = System.currentTimeMillis() - beforeTime;
+					sleep -= timeDiff;
+					if (sleep < 0)
+						sleep = 2;
+					try {
+						Thread.sleep(sleep);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+		}
+
 	}
 
 	@Override
 	public String toString() {
-		return "UnitModel [getUnitX()=" + getUnitX() + ", getUnitY()="
-				+ getUnitY() + ", getTargetY()=" + getTargetY()
-				+ ", getTargetX()=" + getTargetX() + "]";
+		return "UnitModel [userId=" + userId + ", targetLocation="
+				+ targetLocation + ", color=" + color + ", location="
+				+ location + "]";
 	}
-	
-
 }

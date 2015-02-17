@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.felix.game.dto.UserLocationDTO;
+import com.felix.game.map.model.Location;
 import com.felix.game.model.Game;
 import com.felix.game.model.UserGame;
 import com.felix.game.server.message.Message;
@@ -47,13 +48,13 @@ public class GameRoom {
 		// find in game object
 		for (UserGame ug : game.getUserGames())
 			if (ug.getUser().getId() == client.getUser().getId()) {
-				client.setUserLocationDTO(new UserLocationDTO(ug));
+				client.setLocation(new Location(ug.getLocationX(), ug
+						.getLocationY()));
 				break;
 			}
-		if (client.getUserLocationDTO() == null) {
+		if (client.getLocation() == null) {
 			// TODO шось адекватне)
-			client.setUserLocationDTO(new UserLocationDTO(client.getUser()
-					.getId(), 47, 74));
+			client.setLocation(new Location(47, 74));
 		}
 		clients.forEach(c -> client.write(new Message(MessageType.UNIT_ADD, c
 				.getUserLocationDTO())));

@@ -2,26 +2,25 @@ package com.felix.game.view;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import com.felix.game.dto.UnitPathDTO;
 import com.felix.game.dto.UserLocationDTO;
 import com.felix.game.Main;
+import com.felix.game.map.model.Location;
 import com.felix.game.map.model.Map;
 import com.felix.game.model.ChatMessage;
 import com.felix.game.model.UnitModel;
 import com.felix.game.socket.Server;
-import com.felix.game.util.Lock;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
-public class WindowController implements Runnable {
-	private final int DELAY = 25;
+public class WindowController {
 	@FXML
 	private Canvas canvasBack;
 	@FXML
@@ -33,11 +32,9 @@ public class WindowController implements Runnable {
 	private Map map;
 	private int brushCoef = 5;
 	private final Logger log = Logger.getLogger(getClass());
-	private HashMap<Integer, UnitModel> models = new HashMap<>();
+	private HashMap<Integer, UnitModel> models = new HashMap<Integer, UnitModel>();
 	private Integer me;
 	private Main mainApp;
-	private Boolean needsToMove = false;
-	private Lock lock = new Lock();
 
 	public void setId(int id) {
 		log.info("my id=" + id);
@@ -51,50 +48,21 @@ public class WindowController implements Runnable {
 		mainApp.getPrimaryStage().setTitle(
 				"Game id: " + mainApp.getGame().getGameId());
 		map.drawMap(canvasBack.getGraphicsContext2D(), brushCoef);
-		// markUnit(unitX, unitY);
-		new Thread(this).start();
+		// markUnit(models.get(me));
 	}
 
-	public boolean updateMap() {
-		boolean moved = false;
-		for (UnitModel model : models.values()) {
-			System.out.println("tick");
-			Integer unitX = model.getUnitX();
-			Integer unitY = model.getUnitY();
-			Integer targetX = model.getTargetX();
-			Integer targetY = model.getTargetY();
-			if (model.needsToMove())
-				moved = true;
-			else
-				continue;
-			repaintMap(unitX, unitY);
-			if (unitX < targetX)
-				unitX++;
-			else if (unitX > targetX)
-				unitX--;
+	public void move(UnitPathDTO path) {
 
-			if (unitY < targetY)
-				unitY++;
-			else if (unitY > targetY)
-				unitY--;
-			model.setUnitX(unitX);
-			model.setUnitY(unitY);
-			markUnit(model);
-		}
-		return moved;
-	}
-
-	public void move(UserLocationDTO targetLocation) {
-		models.get(targetLocation.getUserId()).setUserLocationDTO(
-				targetLocation);
-		// System.out.println(models);
-		needsToMove = true;
-		lock.unlock();
+		UnitModel model = models.get(path.getUserId());
+		model.setTargetLocation(path.getPath().get(path.getPath().size() - 1));
+		model.startMovement(path.getPath(), canvasFront.getGraphicsContext2D(),
+				brushCoef);
 	}
 
 	public void addUnit(UserLocationDTO locationDTO) {
 		log.info("unit added id=" + locationDTO.getUserId());
 		UnitModel model = new UnitModel(locationDTO);
+		model.setLocation(model.getLocation().zoomIn(brushCoef));
 		models.put(locationDTO.getUserId(), model);
 		markUnit(model);
 	}
@@ -105,50 +73,28 @@ public class WindowController implements Runnable {
 		double x = ev.getX();
 		double y = ev.getY();
 
+		int indX = (int) (x - ((int) (x + 0.0001)) % brushCoef);
+		int indY = (int) (y - ((int) (y + 0.0001)) % brushCoef);
+		if (!map.canGo(indX / brushCoef, indY / brushCoef)) {
+			log.info("invalid target " + indX + " " + indY);
+			return;
+		}
+
 		UnitModel model = models.get(me);
-		repaintMap(model.getTargetX(), model.getTargetY());
+		model.clearTarget(canvasFront.getGraphicsContext2D());
+		model.setTargetLocation(new Location(indX, indY));
+		model.paintTarget(canvasFront.getGraphicsContext2D());
 
-		model.setTargetX((int) (x - ((int) (x + 0.0001)) % brushCoef));
-		model.setTargetY((int) (y - ((int) (y + 0.0001)) % brushCoef));
-		// model.setTargetX((int) (x + 0.000001));
-		// model.setTargetY((int) (y + 0.000001));
-		markTarget(model.getTargetX(), model.getTargetY());
-		needsToMove = true;
-		lock.unlock();
-		Server.instance().moveUnit(model.getUserLocationDTO());
-	}
-
-	private void markTarget(int x, int y) {
-
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				GraphicsContext gc = canvasFront.getGraphicsContext2D();
-				gc.setFill(Color.BLACK);
-				gc.fillOval(x, y, brushCoef, brushCoef);
-			}
-		});
+		List<Location> path = map.getPath(model.getLocation()
+				.zoomOut(brushCoef),
+				model.getTargetLocation().zoomOut(brushCoef));
+		model.startMovement(path, canvasFront.getGraphicsContext2D(), brushCoef);
+		Server.instance().moveUnit(new UnitPathDTO(me, path));
 	}
 
 	private void markUnit(UnitModel m) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				GraphicsContext gc = canvasFront.getGraphicsContext2D();
-				gc.setFill(m.getColor());
-				gc.fillOval(m.getUnitX(), m.getUnitY(), brushCoef, brushCoef);
-			}
-		});
-	}
 
-	private void repaintMap(int x, int y) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				GraphicsContext gc = canvasFront.getGraphicsContext2D();
-				gc.clearRect(x, y, brushCoef, brushCoef);
-			}
-		});
+		m.paintLocation(canvasFront.getGraphicsContext2D());
 
 	}
 
@@ -167,33 +113,4 @@ public class WindowController implements Runnable {
 				+ data.getText() + "\r\n");
 	}
 
-	@Override
-	public void run() {
-		long beforeTime, timeDiff, sleep;
-
-		while (true) {
-
-			while (needsToMove == false) {
-				try {
-					lock.lock();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} finally {
-					lock.unlock();
-				}
-			}
-
-			beforeTime = System.currentTimeMillis();
-			needsToMove = updateMap();
-			timeDiff = System.currentTimeMillis() - beforeTime;
-			sleep = DELAY - timeDiff;
-			if (sleep < 0)
-				sleep = 2;
-			try {
-				Thread.sleep(sleep);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 }

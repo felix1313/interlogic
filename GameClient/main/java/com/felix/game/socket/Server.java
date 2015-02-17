@@ -3,10 +3,12 @@ package com.felix.game.socket;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+
 import javafx.application.Platform;
 
 import org.apache.log4j.Logger;
 
+import com.felix.game.dto.UnitPathDTO;
 import com.felix.game.dto.UserLocationDTO;
 import com.felix.game.model.ChatMessage;
 import com.felix.game.model.Game;
@@ -75,7 +77,7 @@ public class Server extends Thread {
 		return resp;
 	}
 
-	public void moveUnit(UserLocationDTO targetLocation) {
+	public void moveUnit(UnitPathDTO targetLocation) {
 		log.info("ask server to move unit to " + targetLocation);
 		outputStream.write(new Message(MessageType.UNIT_MOVE, targetLocation));
 		try {
@@ -97,7 +99,7 @@ public class Server extends Thread {
 			Message message = inputStream.readMessage();
 			switch (message.getMessageType()) {
 			case UNIT_MOVE:
-				controller.move((UserLocationDTO) message.getData());
+				controller.move((UnitPathDTO) message.getData());
 				log.info("move message recieved");
 				break;
 			case UNIT_ADD:

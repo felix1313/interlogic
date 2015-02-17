@@ -7,9 +7,11 @@ import java.net.Socket;
 import org.apache.log4j.Logger;
 
 import com.felix.game.db.dao.impl.UserDao;
+import com.felix.game.dto.UnitPathDTO;
 import com.felix.game.dto.UserLocationDTO;
 import com.felix.game.exception.DaoException;
 import com.felix.game.exception.IncorrectPasswordException;
+import com.felix.game.map.model.Location;
 import com.felix.game.model.Game;
 import com.felix.game.model.User;
 import com.felix.game.server.message.Message;
@@ -26,7 +28,7 @@ public class Client extends Thread {
 	private MessageInputStream inputStream;
 	private Server server;
 	private GameRoom gameRoom;
-	private UserLocationDTO userLocationDTO;
+	private Location userLocation;
 
 	public Client(Socket socket, Server server) {
 		this.socket = socket;
@@ -148,11 +150,11 @@ public class Client extends Thread {
 		this.socket = socket;
 	}
 
-	public void moveUnit(UserLocationDTO newLocation) {
-		this.userLocationDTO = newLocation;
-		log.info("target location : " + newLocation);
-		gameRoom.sendAll(new Message(MessageType.UNIT_MOVE, newLocation),
-				getUser().getId());
+	public void moveUnit(UnitPathDTO path) {
+		this.userLocation = path.getPath().get(path.getPath().size() - 1);
+		log.info("target location : " + userLocation);
+		gameRoom.sendAll(new Message(MessageType.UNIT_MOVE, path), getUser()
+				.getId());
 	}
 
 	private void sendMessage(Message message) {
@@ -167,7 +169,7 @@ public class Client extends Thread {
 			System.out.println(message);
 			switch (message.getMessageType()) {
 			case UNIT_MOVE:
-				moveUnit((UserLocationDTO) message.getData());
+				moveUnit((UnitPathDTO) message.getData());
 				break;
 			case USER_REGISTER:
 				registerUser((User) message.getData());
@@ -204,10 +206,15 @@ public class Client extends Thread {
 	}
 
 	public UserLocationDTO getUserLocationDTO() {
-		return userLocationDTO;
+		return new UserLocationDTO(this.user.getId(), userLocation.getX(),
+				userLocation.getY());
 	}
 
-	public void setUserLocationDTO(UserLocationDTO userLocationDTO) {
-		this.userLocationDTO = userLocationDTO;
+	public void setLocation(Location location) {
+		this.userLocation = location;
+	}
+
+	public Location getLocation() {
+		return userLocation;
 	}
 }
