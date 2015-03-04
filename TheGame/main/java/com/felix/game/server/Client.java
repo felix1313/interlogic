@@ -3,6 +3,8 @@ package com.felix.game.server;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -162,17 +164,28 @@ public class Client extends Thread {
 		this.gameRoom.sendAll(message, user.getId());
 	}
 
+	private void sendActiveGames() {
+		ArrayList<Game> games = new ArrayList<Game>();
+		server.getGames().values()
+				.forEach(gameroom -> games.add(gameroom.getGame()));
+		log.info("sending games list");
+		sendSuccessReport(games);
+	}
+
 	@Override
 	public void run() {
 		while (true) {
 			Message message = inputStream.readMessage();
-			System.out.println(message);
+			log.info("message received: " + message);
 			switch (message.getMessageType()) {
 			case UNIT_MOVE:
 				moveUnit((UnitPathDTO) message.getData());
 				break;
 			case USER_REGISTER:
 				registerUser((User) message.getData());
+				break;
+			case GET_ACTIVE_GAMES:
+				sendActiveGames();
 				break;
 			case LOGIN:
 				loginUser((User) message.getData());

@@ -1,6 +1,8 @@
 package com.felix.game.model;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,6 +18,7 @@ public class UnitModel {
 	private UnitMove movingTask;
 	private Color color;
 	private Location location;
+	private ExecutorService moveExecutor = Executors.newSingleThreadExecutor();
 
 	public UnitModel() {
 	}
@@ -31,7 +34,7 @@ public class UnitModel {
 	public void startMovement(List<Location> path, GraphicsContext gc, int brush) {
 		stopMoving();
 		this.movingTask = new UnitMove(this, path, gc, brush);
-		new Thread(movingTask).start();
+		moveExecutor.execute(movingTask);
 	}
 
 	public void stopMoving() {
@@ -71,7 +74,6 @@ public class UnitModel {
 	public int getUnitY() {
 		return location.getY();
 	}
-
 
 	public void paintLocation(GraphicsContext gc) {
 		int x = getUnitX();

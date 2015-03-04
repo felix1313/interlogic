@@ -3,6 +3,7 @@ package com.felix.game.socket;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.List;
 
 import javafx.application.Platform;
 
@@ -70,6 +71,20 @@ public class Server extends Thread {
 		return resp;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Game> getGameList() {
+		log.info("retrieving game list..");
+		outputStream.write(new Message(MessageType.GET_ACTIVE_GAMES));
+		Message resp = inputStream.readMessage();
+		if (resp.getMessageType() == MessageType.OPERATION_SUCCESS) {
+			log.info("game list received");
+			return (List<Game>) resp.getData();
+		} else {
+			log.warn("failed to receive list of games");
+			return null;
+		}
+	}
+
 	public Message createGame(Game game) {
 		outputStream.write(new Message(MessageType.GAME_START, game));
 		log.info("created game id:" + game.getGameId());
@@ -83,7 +98,6 @@ public class Server extends Thread {
 		try {
 			outputStream.reset();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

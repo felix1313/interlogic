@@ -10,14 +10,16 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import org.apache.log4j.Logger;
 
@@ -27,11 +29,10 @@ import com.felix.game.model.Game;
 import com.felix.game.server.message.Message;
 import com.felix.game.server.message.MessageType;
 import com.felix.game.socket.Server;
+import com.felix.game.util.PasswordUtil;
 
 public class GameLoadController {
 	private Logger log = Logger.getLogger(getClass());
-	@FXML
-	private TextField gameIdText;
 	@FXML
 	private PasswordField passTextCreate;
 	@FXML
@@ -45,13 +46,85 @@ public class GameLoadController {
 
 	@FXML
 	private Canvas canvas;
+
+	@FXML
+	ComboBox<Game> gameList;
 	private Main mainApp;
 	private Map map;
 
 	private boolean gameLoaded = false;
+	private final int MAP_ZOOM = 1;
 
 	public void setMainApp(Main main) {
 		this.mainApp = main;
+		// List<Game> testGames = new ArrayList<Game>();
+		// // Map map = new Map(128,128);
+		// testGames.add(new Game(0, "sss"));
+		// testGames.add(new Game(1, "s3s"));
+		// testGames.add(new Game(2, "s4s"));
+		// testGames.add(new Game(3, "s5s"));
+		// testGames.forEach(g -> g.setMap(new Map(128, 128)));
+		gameList.getItems().addAll(Server.instance().getGameList());
+		gameList.setCellFactory(new Callback<ListView<Game>, ListCell<Game>>() {
+
+			@Override
+			public ListCell<Game> call(ListView<Game> param) {
+				return new ListCell<Game>() {
+					@Override
+					protected void updateItem(Game item, boolean empty) {
+						super.updateItem(item, empty);
+						if (empty || item == null) {
+							setGraphic(null);
+						} else {
+							String str = "Gameid=" + item.getGameId();
+							if (item.getGamePassword() != null
+									&& PasswordUtil.instance().passwordEquals(
+											"", item.getGamePassword()) == false)
+								str += "(password)";
+							setText(str);
+						}
+					}
+				};
+			}
+		});
+
+		gameList.setConverter(new StringConverter<Game>() {
+
+			@Override
+			public String toString(Game object) {
+				if (object == null)
+					return null;
+				String str = "Gameid=" + object.getGameId();
+				if (object.getGamePassword() != null
+						&& PasswordUtil.instance().passwordEquals("",
+								object.getGamePassword()) == false)
+					str += "(password)";
+				return str;
+			}
+
+			@Override
+			public Game fromString(String string) {
+				if (string == null || string.isEmpty())
+					return null;
+				int from = 0, to;
+				if (string.startsWith("Gameid="))
+					from = "Gameid=".length();
+				to = from;
+				while (to < string.length()
+						&& Character.isDigit(string.charAt(to)))
+					to++;
+
+				Game g = null;
+				try {
+					int id = Integer.parseInt(string.substring(from, to));
+					g = gameList.getItems()
+							.filtered(game -> game.getGameId() == id).get(0);
+				} catch (Exception e) {
+					log.info("incorrect id");
+				}
+				return g;
+			}
+		});
 		accordion.expandedPaneProperty().addListener(
 				new ChangeListener<TitledPane>() {
 					@Override
@@ -61,12 +134,8 @@ public class GameLoadController {
 						if (oldPane != null)
 							oldPane.setCollapsible(true);
 						if (newPane != null)
-							Platform.runLater(new Runnable() {
-								@Override
-								public void run() {
-									newPane.setCollapsible(false);
-								}
-							});
+							Platform.runLater(() -> newPane
+									.setCollapsible(false));
 					}
 				});
 		// for (TitledPane pane : accordion.getPanes())
@@ -146,11 +215,11 @@ public class GameLoadController {
 	private boolean handleConnectClick() {
 
 		// validate
-		if (gameIdText.getText().isEmpty()) {
+		if (gameList.getValue() == null) {
 			log.warn("invalid input");
 			return false;
 		}
-		Integer gameId = Integer.parseInt(gameIdText.getText());
+		Integer gameId = gameList.getValue().getGameId();
 		log.info("trying to join game... " + gameId);
 		Message res = Server.instance()
 				.joinGame(gameId, passTextJoin.getText());
@@ -158,13 +227,24 @@ public class GameLoadController {
 			log.info("connection success");
 			Game game = (Game) res.getData();
 			this.map = game.getMap();
-			map.drawMap(this.canvas.getGraphicsContext2D(), 1);
+			map.drawMap(this.canvas.getGraphicsContext2D(), MAP_ZOOM);
 			mainApp.setGame(game);
 			gameLoaded = true;
 			return true;
 		} else {
 			log.warn("failed to connect" + res.getMessageType());
 			return false;
+		}
+	}
+
+	@FXML
+	void handleComboboxSelection() {
+		log.info("game selected ");
+		Game selected = gameList.getValue();
+		if (selected != null)
+			selected.getMap().drawMap(canvas.getGraphicsContext2D(), MAP_ZOOM);
+		else {
+			canvas.getGraphicsContext2D().clearRect(0, 0, 9999, 9999);
 		}
 	}
 }

@@ -90,10 +90,10 @@ public class Game implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((gameId == null) ? 0 : gameId.hashCode());
-		result = prime * result
-				+ ((gamePassword == null) ? 0 : gamePassword.hashCode());
-		result = prime * result
-				+ ((userGames == null) ? 0 : userGames.hashCode());
+//		result = prime * result
+//				+ ((gamePassword == null) ? 0 : gamePassword.hashCode());
+//		result = prime * result
+//				+ ((userGames == null) ? 0 : userGames.hashCode());
 		return result;
 	}
 
@@ -111,16 +111,16 @@ public class Game implements Serializable {
 				return false;
 		} else if (!gameId.equals(other.gameId))
 			return false;
-		if (gamePassword == null) {
-			if (other.gamePassword != null)
-				return false;
-		} else if (!gamePassword.equals(other.gamePassword))
-			return false;
-		if (userGames == null) {
-			if (other.userGames != null)
-				return false;
-		} else if (!userGames.equals(other.userGames))
-			return false;
+//		if (gamePassword == null) {
+//			if (other.gamePassword != null)
+//				return false;
+//		} else if (!gamePassword.equals(other.gamePassword))
+//			return false;
+//		if (userGames == null) {
+//			if (other.userGames != null)
+//				return false;
+//		} else if (!userGames.equals(other.userGames))
+//			return false;
 		return true;
 	}
 

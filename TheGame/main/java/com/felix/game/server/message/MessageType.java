@@ -8,6 +8,7 @@ public enum MessageType implements Serializable{
 	UNIT_ADD,
 	GAME_START,
 	GAME_LOAD,
+	GET_ACTIVE_GAMES,
 	OPERATION_SUCCESS,
 	INCORRECT_PASSWORD,
 	INVALID_USERNAME,
