@@ -1,8 +1,7 @@
 package com.felix.game.map.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -96,12 +95,13 @@ public class Map implements Serializable {
 		private Path parent;
 		private Double g;
 
-		public Path(Location location, Double h,Double g) {
+		public Path(Location location, Double h, Double g) {
 			this.location = location;
-			this.dist = h+g;
-			this.g=g;
+			this.dist = h + g;
+			this.g = g;
 		}
-		public Path(Location location,Double dist) {
+
+		public Path(Location location, Double dist) {
 			this.location = location;
 			this.dist = dist;
 		}
@@ -120,11 +120,11 @@ public class Map implements Serializable {
 		}
 
 		public int getX() {
-			return location.getX();
+			return location.getIntX();
 		}
 
 		public int getY() {
-			return location.getY();
+			return location.getIntY();
 		}
 
 		@Override
@@ -193,24 +193,45 @@ public class Map implements Serializable {
 	}
 
 	private double heuristicDist(Location a, Location b) {
-		int dx = Math.abs(a.getX() - b.getX());
-		int dy = Math.abs(a.getY() - b.getY());
+		double dx = Math.abs(a.getX() - b.getX());
+		double dy = Math.abs(a.getY() - b.getY());
 		return Math.min(dx, dy) * Math.sqrt(2) + Math.max(dx, dy)
 				- Math.min(dx, dy);
 	}
 
+	private List<Location> trimPath(List<Location> path) {
+		List<Location> res = new ArrayList<Location>();
+		if(path.size()<3)return path;
+		res.add(path.get(0));
+		for (int i = 1; i < path.size() - 1; i++) {
+			if (Math.abs(path.get(i).dist(path.get(i - 1))
+					- path.get(i + 1).dist(path.get(i))) > 1e-5) {
+				res.add(path.get(i));
+			}
+		}
+		res.add(path.get(path.size() - 1));
+		return res;
+	}
+
+	/**
+	 * A* algorithm to find shortest path
+	 * 
+	 * @param from
+	 * @param to
+	 * @return
+	 */
 	public List<Location> getPath(Location from, Location to) {
 		LinkedList<Location> path = new LinkedList<Location>();
 		PriorityQueue<Path> q = new PriorityQueue<Path>();
 		// HashSet<Path> used = new HashSet<Path>();
 		Double dist[][] = new Double[height][width];
-		dist[from.getX()][from.getY()] = heuristicDist(from, to);
-		q.add(new Path(from, 0.0,dist[from.getX()][from.getY()]));
+		dist[from.getIntX()][from.getIntY()] = heuristicDist(from, to);
+		q.add(new Path(from, 0.0, dist[from.getIntX()][from.getIntY()]));
 
 		while (q.size() > 0) {
 			Path cur = q.poll();
 			if (cur.getLocation().equals(to)) {
-				for (; cur.getParent() != null; cur = cur.getParent())
+				for (; cur != null; cur = cur.getParent())
 					path.addFirst(cur.location);
 				break;
 			}
@@ -221,8 +242,7 @@ public class Map implements Serializable {
 						if (i != cur.getX() && j != cur.getY())
 							dst = Math.sqrt(2.0);
 						Location loc = new Location(i, j);
-						double cost = cur.getG() + dst
-								+ heuristicDist(loc, to); 
+						double cost = cur.getG() + dst + heuristicDist(loc, to);
 						if (dist[i][j] == null || cost < dist[i][j]) {
 							Path ld = new Path(new Location(i, j), dist[i][j]);
 							q.remove(ld);
@@ -235,6 +255,6 @@ public class Map implements Serializable {
 					}
 				}
 		}
-		return path;
+		return trimPath(path);
 	}
 }

@@ -1,5 +1,6 @@
 package com.felix.game.view;
 
+import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ import com.felix.game.map.model.Location;
 import com.felix.game.map.model.Map;
 import com.felix.game.model.ChatMessage;
 import com.felix.game.model.UnitModel;
-import com.felix.game.socket.Server;
+import com.felix.game.server.Server;
 
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -57,6 +58,10 @@ public class WindowController {
 		model.setTargetLocation(path.getPath().get(path.getPath().size() - 1));
 		model.startMovement(path.getPath(), canvasFront.getGraphicsContext2D(),
 				brushCoef);
+	}
+
+	public void stopMovement(int userId) {
+		models.get(userId).stopMoving();
 	}
 
 	public void addUnit(UserLocationDTO locationDTO) {
@@ -111,6 +116,20 @@ public class WindowController {
 	public void chat(ChatMessage data) {
 		messageOutput.appendText("[" + data.getAuthor() + "]: "
 				+ data.getText() + "\r\n");
+	}
+
+	public void handleCrashMessage(UnitPathDTO data){
+		if(data.getPath()==null)
+			models.get(data.getUserId()).rejectCrash();
+		else crashMovement(data.getUserId(),data.getPath());
+	}
+	public void crashMovement(int userId,List<Location> locations) {
+		if (locations.size() != 2) {
+			log.error("incorrect crash parameter");
+			throw new InvalidParameterException();
+		}
+		log.trace("updating path for "+userId);
+		models.get(userId).crash(locations.get(0), locations.get(1));
 	}
 
 }

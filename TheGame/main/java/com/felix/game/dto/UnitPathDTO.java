@@ -10,10 +10,11 @@ public class UnitPathDTO implements Serializable {
 	private static final long serialVersionUID = -3446028900832264546L;
 	private int userId;
 	private List<Location> path;
-
+	private long time;
 	public UnitPathDTO(int userId, List<Location> path) {
 		this.userId = userId;
 		this.path = path;
+		this.time=System.currentTimeMillis();
 	}
 
 	public int getUserId() {
@@ -35,6 +36,14 @@ public class UnitPathDTO implements Serializable {
 	@Override
 	public String toString() {
 		return "UnitPathDTO [userId=" + userId + ", path=" + path + "]";
+	}
+
+	public long getTime() {
+		return time;
+	}
+
+	public void setTime(long time) {
+		this.time = time;
 	}
 
 }

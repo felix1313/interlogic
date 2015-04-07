@@ -26,9 +26,9 @@ import org.apache.log4j.Logger;
 import com.felix.game.Main;
 import com.felix.game.map.model.Map;
 import com.felix.game.model.Game;
+import com.felix.game.server.Server;
 import com.felix.game.server.message.Message;
 import com.felix.game.server.message.MessageType;
-import com.felix.game.socket.Server;
 import com.felix.game.util.PasswordUtil;
 
 public class GameLoadController {

@@ -8,8 +8,8 @@ public class UserLocationDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int userId;
-	private int locationX;
-	private int locationY;
+	private double locationX;
+	private double locationY;
 
 	public UserLocationDTO() {
 
@@ -21,7 +21,7 @@ public class UserLocationDTO implements Serializable {
 		this.locationY = userGame.getLocationY();
 	}
 
-	public UserLocationDTO(int userId, int locationX, int locationY) {
+	public UserLocationDTO(int userId, double locationX, double locationY) {
 		this.userId = userId;
 		this.locationX = locationX;
 		this.locationY = locationY;
@@ -35,19 +35,19 @@ public class UserLocationDTO implements Serializable {
 		this.userId = userId;
 	}
 
-	public int getLocationX() {
+	public double getLocationX() {
 		return locationX;
 	}
 
-	public void setLocationX(int locationX) {
+	public void setLocationX(double locationX) {
 		this.locationX = locationX;
 	}
 
-	public int getLocationY() {
+	public double getLocationY() {
 		return locationY;
 	}
 
-	public void setLocationY(int locationY) {
+	public void setLocationY(double locationY) {
 		this.locationY = locationY;
 	}
 

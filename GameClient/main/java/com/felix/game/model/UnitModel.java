@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -12,6 +14,7 @@ import com.felix.game.dto.UserLocationDTO;
 import com.felix.game.map.model.Location;
 
 public class UnitModel {
+	private final Logger log = Logger.getLogger(getClass());
 	private static final int UNIT_SIZE = 5;
 	private int userId;
 	private Location targetLocation;
@@ -35,6 +38,15 @@ public class UnitModel {
 		stopMoving();
 		this.movingTask = new UnitMove(this, path, gc, brush);
 		moveExecutor.execute(movingTask);
+	}
+
+	public void rejectCrash(){
+		
+	}
+	public void crash(Location rejectedLocation, Location stopLocation) {
+		if (movingTask != null)
+			movingTask.crash(rejectedLocation, stopLocation);
+		log.trace("crash: stopLocation = " + stopLocation);
 	}
 
 	public void stopMoving() {
@@ -67,17 +79,17 @@ public class UnitModel {
 		this.color = color;
 	}
 
-	public int getUnitX() {
+	public double getUnitX() {
 		return location.getX();
 	}
 
-	public int getUnitY() {
+	public double getUnitY() {
 		return location.getY();
 	}
 
 	public void paintLocation(GraphicsContext gc) {
-		int x = getUnitX();
-		int y = getUnitY();
+		double x = getUnitX();
+		double y = getUnitY();
 		Platform.runLater(() -> {
 			gc.setFill(getColor());
 			gc.fillOval(x, y, UNIT_SIZE, UNIT_SIZE);
@@ -85,29 +97,29 @@ public class UnitModel {
 	}
 
 	public void paintTarget(GraphicsContext gc) {
-		int x = getTargetX();
-		int y = getTargetY();
+		double x = getTargetX();
+		double y = getTargetY();
 		gc.setFill(Color.BLACK);
 		gc.fillOval(x, y, UNIT_SIZE, UNIT_SIZE);
 	}
 
 	public void clearLocation(GraphicsContext gc) {
-		int x = getUnitX();
-		int y = getUnitY();
+		double x = getUnitX();
+		double y = getUnitY();
 		Platform.runLater(() -> gc.clearRect(x, y, UNIT_SIZE, UNIT_SIZE));
 	}
 
 	public void clearTarget(GraphicsContext gc) {
-		int x = getTargetX();
-		int y = getTargetY();
+		double x = getTargetX();
+		double y = getTargetY();
 		Platform.runLater(() -> gc.clearRect(x, y, UNIT_SIZE, UNIT_SIZE));
 	}
 
-	private int getTargetX() {
+	private double getTargetX() {
 		return getTargetLocation().getX();
 	}
 
-	private int getTargetY() {
+	private double getTargetY() {
 		return getTargetLocation().getY();
 	}
 
@@ -138,12 +150,24 @@ public class UnitModel {
 		private List<Location> path;
 		private UnitModel unit;
 		private GraphicsContext gc;
-		private static final int DELAY = 25;
+		private static final int DELAY = 100;
 		private int brushCoef;
-		private boolean isStopped;
+		private boolean crashes = false;
+		private boolean isStopped = false;
+		private Location rejectedLocation;
+		private Location stopLocation;
+
+		public void crash(Location rejectedLocation, Location stopLocation) {
+			this.rejectedLocation = rejectedLocation;
+			this.stopLocation = stopLocation;
+			this.crashes = true;
+		}
+		public void rejectCrash(){
+			this.crashes=false;
+		}
 
 		public void stop() {
-			isStopped = true;
+			this.isStopped = true;
 		}
 
 		public UnitMove(UnitModel unit, List<Location> path,
@@ -157,40 +181,49 @@ public class UnitModel {
 		@Override
 		public void run() {
 			long beforeTime, timeDiff, sleep;
-
-			for (Location point : path) {
-				if (isStopped)
-					break;
+			for (int i = 0; i < path.size() && !isStopped; i++) {
+				Location point = path.get(i);
 				Location scaledPoint = point.zoomIn(brushCoef);
+				long timePerCell = DELAY;
+				boolean diag;
+				if (scaledPoint.getX() != unit.getLocation().getX()
+						&& scaledPoint.getY() != unit.getLocation().getY())
+					diag = true;
+				else
+					diag = false;
+
+				if (diag)
+					timePerCell *= Math.sqrt(2.0);
+				long timeOnMap = timePerCell / brushCoef;
+				
 				while (!isStopped
 						&& unit.getLocation().equals(scaledPoint) == false) {
 					beforeTime = System.currentTimeMillis();
-					boolean diag;
-					if (scaledPoint.getX() != unit.getLocation().getX()
-							&& scaledPoint.getY() != unit.getLocation().getY())
-						diag = true;
-					else
-						diag = false;
-
-					sleep = DELAY;
-					if (diag)
-						sleep *= 1.414;
-
-					int newX = unit.getLocation().getX();
+					if (crashes && point.equals(rejectedLocation)) {
+						point = stopLocation;
+					}else {
+						point=path.get(i);
+					}
+					scaledPoint = point.zoomIn(brushCoef);
+					double newX = unit.getLocation().getX();
 					if (scaledPoint.getX() < unit.getLocation().getX())
-						newX--;
+						newX=Math.max(newX-1, scaledPoint.getX());
 					else if (scaledPoint.getX() > unit.getLocation().getX())
-						newX++;
-					int newY = unit.getLocation().getY();
+						newX=Math.min(newX+1, scaledPoint.getX());
+					double newY = unit.getLocation().getY();
 					if (scaledPoint.getY() < unit.getLocation().getY())
-						newY--;
+						newY=Math.max(newY-1, scaledPoint.getY());
 					else if (scaledPoint.getY() > unit.getLocation().getY())
-						newY++;
+						newY=Math.min(newY+1, scaledPoint.getY());
 
 					Location newLocation = new Location(newX, newY);
 					unit.move(newLocation, gc);
+					sleep = timeOnMap;
+
+					if(crashes && newLocation.equals(scaledPoint))isStopped=true;
 					timeDiff = System.currentTimeMillis() - beforeTime;
 					sleep -= timeDiff;
+
 					if (sleep < 0)
 						sleep = 2;
 					try {
@@ -199,6 +232,7 @@ public class UnitModel {
 						e.printStackTrace();
 					}
 				}
+
 
 			}
 		}

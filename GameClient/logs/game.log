@@ -1,0 +1,7 @@
+INFO    2015-03-07 12:51:12,583 [JavaFX Application Thread] com.felix.game.view.LoginController  - trying to login...
+INFO    2015-03-07 12:51:12,601 [JavaFX Application Thread] com.felix.game.socket.Server  - connection established
+WARN    2015-03-07 12:51:14,018 [JavaFX Application Thread] com.felix.game.view.LoginController  - failed to login Message [messageType=INCORRECT_PASSWORD, data=null]
+INFO    2015-03-07 12:51:17,212 [JavaFX Application Thread] com.felix.game.view.LoginController  - trying to login...
+INFO    2015-03-07 12:51:17,221 [JavaFX Application Thread] com.felix.game.view.LoginController  - login success
+INFO    2015-03-07 12:51:17,297 [JavaFX Application Thread] com.felix.game.socket.Server  - retrieving game list..
+INFO    2015-03-07 12:51:17,375 [JavaFX Application Thread] com.felix.game.socket.Server  - game list received

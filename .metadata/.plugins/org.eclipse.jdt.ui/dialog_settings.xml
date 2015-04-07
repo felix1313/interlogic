@@ -25,6 +25,20 @@
 		<item value="1" key="VisibilityModifier"/>
 		<item value="false" key="FinalModifier"/>
 	</section>
+	<section name="FatJarPackageWizard">
+		<item value="/home/felix/java/workspace/interlogic" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
+		<item value="Main (6) - GameClient" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
+		<item value="/home/felix/Desktop/game.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="false" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
+		<item value="1" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
+		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="/home/felix/Desktop/game.jar"/>
+		</list>
+		<list key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION_HISTORY">
+			<item value="/home/felix/java/workspace/interlogic.xml"/>
+			<item value=".xml"/>
+		</list>
+	</section>
 	<section name="RenameInformationPopup">
 	</section>
 	<section name="DialogBounds_AddUnimplementedConstructorsDialog">
@@ -62,17 +76,17 @@
 		<item value="true" key="jarOptionsWizardPage.EXPORT_ERRORS"/>
 		<item value="true" key="JarManifestWizardPage.GENERATE_MANIFEST"/>
 		<item value="true" key="JarPackageWizardPage.EXPORT_CLASS_FILES"/>
-		<item value="false" key="JarPackageWizardPage.OVERWRITE"/>
+		<item value="true" key="JarPackageWizardPage.OVERWRITE"/>
 		<item value="false" key="jarOptionsWizardPage.SAVE_DESCRIPTION"/>
 		<item value="false" key="JarPackageWizardPage.REFACTORINGS"/>
 		<item value="false" key="JarManifestWizardPage.SAVE_MANIFEST"/>
 		<item value="false" key="JarPackageWizardPage.EXPORT_OUTPUT_FOLDER"/>
 		<list key="JarPackageWizardPage.DESTINATION_NAMES_ID">
-			<item value="GameClient/lib/game-server.jar"/>
 			<item value="GameClient/lib/interlogic-map-editor.jar"/>
 			<item value="TheGame/lib/map-editor.jar"/>
+			<item value="GameClient/lib/game-server.jar"/>
+			<item value="/home/felix/Desktop/game1.jar"/>
 			<item value="E:\java\lib\the-game.jar"/>
-			<item value="E:\java\lib\map editor.jar"/>
 		</list>
 	</section>
 	<section name="JavaElementSearchActions">
@@ -110,16 +124,17 @@
 	</section>
 	<section name="OptionalMessageDialog.hide.">
 		<item value="true" key="org.eclipse.jdt.ui.typecomment.deprecated"/>
+		<item value="true" key="RunnableJar.export.ipwarning"/>
 	</section>
 	<section name="DialogBounds_GenerateHashCodeEqualsDialog">
-		<item value="504" key="DIALOG_WIDTH"/>
+		<item value="510" key="DIALOG_WIDTH"/>
 		<item value="1|Noto Sans|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="640" key="DIALOG_HEIGHT"/>
 		<item value="567" key="DIALOG_X_ORIGIN"/>
 		<item value="80" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="DialogBounds_GetterSetterTreeSelectionDialog">
-		<item value="545" key="DIALOG_WIDTH"/>
+		<item value="547" key="DIALOG_WIDTH"/>
 		<item value="1|Noto Sans|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="743" key="DIALOG_HEIGHT"/>
 		<item value="0" key="DIALOG_Y_ORIGIN"/>
@@ -174,6 +189,6 @@
 		<item value="false" key="create_package_info_java"/>
 	</section>
 	<section name="BuildPathsPropertyPage">
-		<item value="2" key="pageIndex"/>
+		<item value="0" key="pageIndex"/>
 	</section>
 </section>

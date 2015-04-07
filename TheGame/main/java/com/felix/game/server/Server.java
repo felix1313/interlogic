@@ -1,9 +1,12 @@
 package com.felix.game.server;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
@@ -15,7 +18,6 @@ import com.felix.game.server.message.Message;
 
 public class Server {
 	private Map<Integer, GameRoom> games = new ConcurrentHashMap<>();
-	public static final int PORT = 6667;
 	private Logger log = Logger.getLogger(getClass());
 
 	public void sendAll(Message message) {
@@ -45,7 +47,18 @@ public class Server {
 	public void start() {
 		ServerSocket serverSocket;
 		try {
-			serverSocket = new ServerSocket(PORT);
+			Properties properties = new Properties();
+			InputStream input = null;
+
+			try {
+				input = new FileInputStream("config/connection.properties");
+				properties.load(input);
+			} catch (IOException e) {
+				log.error("failed to load properties file");
+				e.printStackTrace();
+			}
+			Integer port = Integer.parseInt(properties.getProperty("port"));
+			serverSocket = new ServerSocket(port);
 			while (true) {
 				Socket clientSocket = serverSocket.accept();
 				Client client = new Client(clientSocket, this);

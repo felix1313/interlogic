@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
@@ -49,6 +50,7 @@ public class Client extends Thread {
 			user.setPassword(PasswordUtil.instance().encode(user.getPassword()));
 			UserDao.instance().create(user);
 			this.user = user;
+			log.info("new user created id="+user.getId()+" login="+user.getLogin());
 			sendUserId(user.getId());
 		} catch (DaoException ex) {
 			ex.printStackTrace();
@@ -154,9 +156,11 @@ public class Client extends Thread {
 
 	public void moveUnit(UnitPathDTO path) {
 		this.userLocation = path.getPath().get(path.getPath().size() - 1);
+		
+		
+
 		log.info("target location : " + userLocation);
-		gameRoom.sendAll(new Message(MessageType.UNIT_MOVE, path), getUser()
-				.getId());
+		gameRoom.moveUnit( path);
 	}
 
 	private void sendMessage(Message message) {

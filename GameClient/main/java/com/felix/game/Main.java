@@ -2,11 +2,12 @@ package com.felix.game;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.felix.game.model.Game;
 import com.felix.game.model.User;
-import com.felix.game.socket.Server;
+import com.felix.game.server.Server;
 import com.felix.game.view.GameLoadController;
 import com.felix.game.view.LoginController;
 import com.felix.game.view.WindowController;
@@ -24,9 +25,10 @@ public class Main extends Application {
 	private Stage primaryStage;
 	private User user;
 	private Game game;
-
+	private Logger log=Logger.getLogger(getClass());
 	@Override
 	public void start(Stage primaryStage) {
+		log.trace("starting appliaction");
 		this.primaryStage = primaryStage;
 		initRootLayout();
 		loadLoginForm();
