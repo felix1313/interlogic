@@ -103,19 +103,22 @@ public class GameRoom {
 		sendAll(new Message(MessageType.UNIT_MOVE, path), path.getUserId());
 		// TODO speed setting
 		log.trace("unit move message sent");
-		this.unitMoveModels.get(path.getUserId()).addMove(path, 1);
+	//	this.unitMoveModels.get(path.getUserId()).addMove(path, 1);
 	}
 
 	public void reportCrash(int userId, Location rejectedLocation,
 			Location crashLocation) {
 		List<Location> list = null;
-		
+		System.out.println(rejectedLocation);
+		System.out.println(crashLocation);
 		if (rejectedLocation != null && crashLocation != null) {
 			list = new ArrayList<Location>(2);
 			list.add(new Location(rejectedLocation));
 			list.add(new Location(crashLocation));
+			System.out.println(list);
 		}
-		log.info("sending user "+userId+(list==null?"no":"")+" crash report");
+		log.info("sending user " + userId + (list == null ? "no" : "")
+				+ " crash report");
 		sendAll(new Message(MessageType.UNIT_CRASH, new UnitPathDTO(userId,
 				list)));
 	}

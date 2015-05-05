@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.lang.Runnable"/>
-<fullyQualifiedTypeName name="javafx.concurrent.Worker"/>
-<fullyQualifiedTypeName name="com.felix.game.dto.UserLocationDTO"/>
-<fullyQualifiedTypeName name="com.felix.game.model.UnitModel.UnitMove"/>
-<fullyQualifiedTypeName name="java.io.Serializable"/>
-<fullyQualifiedTypeName name="com.felix.game.model.UnitModel"/>
-<fullyQualifiedTypeName name="com.felix.game.util.Lock"/>
-<fullyQualifiedTypeName name="javafx.scene.control.ComboBox"/>
-<fullyQualifiedTypeName name="javafx.util.Callback"/>
-<fullyQualifiedTypeName name="javafx.scene.control.ListCell"/>
-<fullyQualifiedTypeName name="com.felix.game.model.Game"/>
 <fullyQualifiedTypeName name="com.felix.game.socket.Server"/>
 <fullyQualifiedTypeName name="java.lang.Override"/>
 <fullyQualifiedTypeName name="com.felix.game.view.GameLoadController.Hui"/>
@@ -18,10 +7,7 @@
 <fullyQualifiedTypeName name="javafx.event.EventHandler"/>
 <fullyQualifiedTypeName name="javafx.event.ActionEvent"/>
 <fullyQualifiedTypeName name="java.lang.Exception"/>
-<fullyQualifiedTypeName name="javafx.application.Platform"/>
 <fullyQualifiedTypeName name="com.sun.prism.paint.Color"/>
-<fullyQualifiedTypeName name="javafx.scene.canvas.GraphicsContext"/>
-<fullyQualifiedTypeName name="javafx.scene.paint.Color"/>
 <fullyQualifiedTypeName name="com.felix.game.util.PasswordUtil"/>
 <fullyQualifiedTypeName name="java.util.Properties"/>
 <fullyQualifiedTypeName name="java.io.InputStream"/>
@@ -31,7 +17,6 @@
 <fullyQualifiedTypeName name="java.util.concurrent.ExecutorService"/>
 <fullyQualifiedTypeName name="java.util.concurrent.Executors"/>
 <fullyQualifiedTypeName name="com.felix.game.server.GameRoom.UnitMove"/>
-<fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="java.lang.Comparable"/>
 <fullyQualifiedTypeName name="java.lang.Long"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Dialogs"/>
@@ -41,12 +26,10 @@
 <fullyQualifiedTypeName name="java.lang.ClassLoader"/>
 <fullyQualifiedTypeName name="java.util.LinkedList"/>
 <fullyQualifiedTypeName name="java.util.Collections"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="com.felix.game.RTutil.UnitMovement"/>
 <fullyQualifiedTypeName name="java.lang.Math"/>
 <fullyQualifiedTypeName name="com.felix.game.dto.UnitPathDTO"/>
 <fullyQualifiedTypeName name="com.felix.game.RTutil.MoveSimulator"/>
-<fullyQualifiedTypeName name="com.felix.game.map.model.Map"/>
 <fullyQualifiedTypeName name="com.felix.game.server.GameRoom"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="java.security.InvalidParameterException"/>
@@ -54,10 +37,27 @@
 <fullyQualifiedTypeName name="org.apache.log4j.Logger"/>
 <fullyQualifiedTypeName name="javax.crypto.EncryptedPrivateKeyInfo"/>
 <fullyQualifiedTypeName name="java.util.Queue"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.Set"/>
 <fullyQualifiedTypeName name="java.util.HashSet"/>
 <fullyQualifiedTypeName name="com.felix.game.RTutil.UnitMoveModel"/>
-<fullyQualifiedTypeName name="com.felix.game.map.model.Location"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="com.felix.game.view.WindowController"/>
+<fullyQualifiedTypeName name="com.felix.game.model.MapModel"/>
+<fullyQualifiedTypeName name="com.felix.game.model.Unit"/>
+<fullyQualifiedTypeName name="javafx.scene.input.MouseButton"/>
+<fullyQualifiedTypeName name="java.awt.Graphics2D"/>
+<fullyQualifiedTypeName name="java.lang.Deprecated"/>
+<fullyQualifiedTypeName name="javafx.scene.paint.Color"/>
+<fullyQualifiedTypeName name="javafx.scene.canvas.GraphicsContext"/>
+<fullyQualifiedTypeName name="com.felix.game.util.Circle"/>
+<fullyQualifiedTypeName name="com.felix.game.map.model.Location"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="com.felix.game.map.model.Map"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="com.felix.game.model.Bullet.BulletShooter"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="com.felix.game.model.UnitModel"/>
+<fullyQualifiedTypeName name="com.felix.game.util.MapObject"/>
+<fullyQualifiedTypeName name="com.felix.game.model.Bullet"/>
+<fullyQualifiedTypeName name="javafx.application.Platform"/>
 </qualifiedTypeNameHistroy>

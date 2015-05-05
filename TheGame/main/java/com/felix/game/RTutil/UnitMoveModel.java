@@ -22,6 +22,7 @@ public class UnitMoveModel {
 	private boolean crashes = false;
 	private long crashTime = Long.MAX_VALUE;
 	private Location crashLocation;
+	private Location correctedCrashLocation;
 	private Location rejectedLocation;
 	private Map<Integer, UnitMoveModel> unitsMap;
 	private GameRoom gameRoom;
@@ -124,8 +125,8 @@ public class UnitMoveModel {
 					if (t1Intersect < this.crashTime) {
 						this.crashes = true;
 						this.crashLocation = intersect;
-						// Location.subtract( left.getLocation(), intersect,
-						// 0.5);
+						correctedCrashLocation = Location.subtract(
+								left.getLocation(), intersect, 1);
 						this.rejectedLocation = right.getLocation();
 						long oldCrashTime = this.crashTime;
 						this.crashTime = t1Intersect;
@@ -200,6 +201,8 @@ public class UnitMoveModel {
 			this.rejectedLocation = right.getLocation();
 			long oldCrashTime = this.crashTime;
 			this.crashTime = timeAtIntersect;
+			this.correctedCrashLocation = Location.subtract(left.getLocation(),
+					crashLocation, 1);
 			if (Math.abs(crashTime - oldCrashTime) > timeEPS) {
 				if (this.crashSet == null)
 					this.crashSet = new HashMap<UnitMoveModel, Location>();
@@ -218,7 +221,7 @@ public class UnitMoveModel {
 		currentChecking.add(this);
 		log.trace("check crash");
 		TimeLocationPair left, right;
-		for (int i = 1; i < pathSize()  && !this.crashes ; i++) {
+		for (int i = 1; i < pathSize() && !this.crashes; i++) {
 			left = get(i - 1);
 			right = get(i);
 			checkSegmentCrash(left, right);
@@ -226,7 +229,7 @@ public class UnitMoveModel {
 
 		if (this.crashes) {
 			gameRoom.reportCrash(unitId, rejectedLocation,
-					Location.subtract(rejectedLocation, crashLocation, -1));
+					correctedCrashLocation);
 			log.trace("sending crash report at" + crashLocation);
 
 			if (this.crashSet != null)

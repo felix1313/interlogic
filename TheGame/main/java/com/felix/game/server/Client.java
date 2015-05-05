@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
@@ -50,7 +48,8 @@ public class Client extends Thread {
 			user.setPassword(PasswordUtil.instance().encode(user.getPassword()));
 			UserDao.instance().create(user);
 			this.user = user;
-			log.info("new user created id="+user.getId()+" login="+user.getLogin());
+			log.info("new user created id=" + user.getId() + " login="
+					+ user.getLogin());
 			sendUserId(user.getId());
 		} catch (DaoException ex) {
 			ex.printStackTrace();
@@ -156,11 +155,9 @@ public class Client extends Thread {
 
 	public void moveUnit(UnitPathDTO path) {
 		this.userLocation = path.getPath().get(path.getPath().size() - 1);
-		
-		
 
 		log.info("target location : " + userLocation);
-		gameRoom.moveUnit( path);
+		gameRoom.moveUnit(path);
 	}
 
 	private void sendMessage(Message message) {
@@ -174,6 +171,11 @@ public class Client extends Thread {
 				.forEach(gameroom -> games.add(gameroom.getGame()));
 		log.info("sending games list");
 		sendSuccessReport(games);
+	}
+
+	private void shootMessage(Location target) {
+		this.gameRoom.sendAll(new Message(MessageType.SHOOT_MESSAGE,
+				new UserLocationDTO(getUser().getId(), target)), user.getId());
 	}
 
 	@Override
@@ -203,9 +205,13 @@ public class Client extends Thread {
 			case CHAT_MESSAGE:
 				sendMessage(message);
 				break;
+			case SHOOT_MESSAGE:
+				shootMessage((Location) message.getData());
+				break;
 			case EXIT:
 				this.exit();
 				break;
+
 			default:
 				sendFailureReport(MessageType.OPERATION_FAIL);
 				log.error("unknown command");

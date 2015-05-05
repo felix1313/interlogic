@@ -2,6 +2,7 @@ package com.felix.game.dto;
 
 import java.io.Serializable;
 
+import com.felix.game.map.model.Location;
 import com.felix.game.model.UserGame;
 
 public class UserLocationDTO implements Serializable {
@@ -10,9 +11,18 @@ public class UserLocationDTO implements Serializable {
 	private int userId;
 	private double locationX;
 	private double locationY;
-
+	
 	public UserLocationDTO() {
 
+	}
+	
+	public UserLocationDTO(int userId,Location location){
+		this.userId = userId;
+		this.locationX=location.getX();
+		this.locationY=location.getY();
+	}
+	public Location getLocation() {
+		return new Location(locationX, locationY);
 	}
 
 	public UserLocationDTO(UserGame userGame) {

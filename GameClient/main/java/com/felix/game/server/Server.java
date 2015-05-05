@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import com.felix.game.dto.UnitPathDTO;
 import com.felix.game.dto.UserLocationDTO;
+import com.felix.game.map.model.Location;
 import com.felix.game.model.ChatMessage;
 import com.felix.game.model.Game;
 import com.felix.game.model.User;
@@ -119,6 +120,10 @@ public class Server extends Thread {
 		}
 	}
 
+	public void shoot(Location target) {
+		outputStream.write(new Message(MessageType.SHOOT_MESSAGE, target));
+	}
+
 	public void sendMessage(ChatMessage message) {
 		log.info("ask server to send chat message");
 		outputStream.write(new Message(MessageType.CHAT_MESSAGE, message));
@@ -139,6 +144,9 @@ public class Server extends Thread {
 				break;
 			case UNIT_ADD:
 				controller.addUnit((UserLocationDTO) message.getData());
+				break;
+			case SHOOT_MESSAGE:
+				controller.shoot((UserLocationDTO) message.getData());
 				break;
 			case UNIT_CRASH:
 				log.info("unit crash report received");

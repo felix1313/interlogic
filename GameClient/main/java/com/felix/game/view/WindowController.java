@@ -11,14 +11,16 @@ import com.felix.game.dto.UnitPathDTO;
 import com.felix.game.dto.UserLocationDTO;
 import com.felix.game.Main;
 import com.felix.game.map.model.Location;
-import com.felix.game.map.model.Map;
+import com.felix.game.model.Bullet;
 import com.felix.game.model.ChatMessage;
+import com.felix.game.model.MapModel;
 import com.felix.game.model.UnitModel;
 import com.felix.game.server.Server;
 
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 public class WindowController {
@@ -30,8 +32,7 @@ public class WindowController {
 	private TextArea messageInput;
 	@FXML
 	private TextArea messageOutput;
-	private Map map;
-	private int brushCoef = 5;
+	private MapModel mapModel = new MapModel();
 	private final Logger log = Logger.getLogger(getClass());
 	private HashMap<Integer, UnitModel> models = new HashMap<Integer, UnitModel>();
 	private Integer me;
@@ -45,19 +46,20 @@ public class WindowController {
 	public void init(Main mainApp) {
 		log.info("windowcontroller init");
 		this.mainApp = mainApp;
-		this.map = mainApp.getGame().getMap();
+		this.mapModel.setMap(mainApp.getGame().getMap());
+		this.mapModel.setMapGraphics(canvasBack.getGraphicsContext2D());
+		this.mapModel.setUnitGraphics(canvasFront.getGraphicsContext2D());
+		this.mapModel.drawMap();
 		mainApp.getPrimaryStage().setTitle(
 				"Game id: " + mainApp.getGame().getGameId());
-		map.drawMap(canvasBack.getGraphicsContext2D(), brushCoef);
-		// markUnit(models.get(me));
+		// mapModel.markUnit(models.get(me));
 	}
 
 	public void move(UnitPathDTO path) {
-
 		UnitModel model = models.get(path.getUserId());
 		model.setTargetLocation(path.getPath().get(path.getPath().size() - 1));
-		model.startMovement(path.getPath(), canvasFront.getGraphicsContext2D(),
-				brushCoef);
+		long ping = System.currentTimeMillis() - path.getTime();
+		model.startMovement(path.getPath(), ping);
 	}
 
 	public void stopMovement(int userId) {
@@ -66,41 +68,52 @@ public class WindowController {
 
 	public void addUnit(UserLocationDTO locationDTO) {
 		log.info("unit added id=" + locationDTO.getUserId());
-		UnitModel model = new UnitModel(locationDTO);
-		model.setLocation(model.getLocation().zoomIn(brushCoef));
-		models.put(locationDTO.getUserId(), model);
-		markUnit(model);
-	}
+		UnitModel model = new UnitModel(locationDTO, mapModel);
 
-	@FXML
-	private void handleCanvasClick(MouseEvent ev) {
+		models.put(locationDTO.getUserId(), model);
+		mapModel.markUnit(model);
+	}
+	public void shoot(UserLocationDTO userTarget){
+		models.get(userTarget.getUserId()).shoot(userTarget.getLocation());
+	}
+	private void handleLeftButtonClick(MouseEvent ev) {
 		log.info("canvas click");
+
 		double x = ev.getX();
 		double y = ev.getY();
 
-		int indX = (int) (x - ((int) (x + 0.0001)) % brushCoef);
-		int indY = (int) (y - ((int) (y + 0.0001)) % brushCoef);
-		if (!map.canGo(indX / brushCoef, indY / brushCoef)) {
-			log.info("invalid target " + indX + " " + indY);
+		if (!mapModel.canGo(x, y)) {
+			log.info("invalid target " + x + " " + y);
 			return;
 		}
 
 		UnitModel model = models.get(me);
-		model.clearTarget(canvasFront.getGraphicsContext2D());
-		model.setTargetLocation(new Location(indX, indY));
-		model.paintTarget(canvasFront.getGraphicsContext2D());
+		// model.clearTarget(canvasFront.getGraphicsContext2D());
+		model.setTargetLocation(new Location(x, y));
+		// model.paintTarget(canvasFront.getGraphicsContext2D());
 
-		List<Location> path = map.getPath(model.getLocation()
-				.zoomOut(brushCoef),
-				model.getTargetLocation().zoomOut(brushCoef));
-		model.startMovement(path, canvasFront.getGraphicsContext2D(), brushCoef);
+		int brush = mapModel.getBrushcoef();
+		List<Location> path = mapModel.getMap().getPath(
+				model.getLocation().shift(brush).zoomOut(brush),
+				model.getTargetLocation().shift(brush).zoomOut(brush));
 		Server.instance().moveUnit(new UnitPathDTO(me, path));
+		model.startMovement(path, 0);
 	}
 
-	private void markUnit(UnitModel m) {
+	private void handleRightButtonClick(MouseEvent ev) {
+		log.info("right button click");
+		Location target = new Location(ev.getX(),ev.getY());
+		Server.instance().shoot(target);
+		models.get(me).shoot(target);
+	}
 
-		m.paintLocation(canvasFront.getGraphicsContext2D());
-
+	@FXML
+	private void handleCanvasClick(MouseEvent ev) {
+		if (ev.getButton().equals(MouseButton.PRIMARY)) {
+			handleLeftButtonClick(ev);
+		} else if (ev.getButton().equals(MouseButton.SECONDARY)) {
+			handleRightButtonClick(ev);
+		}
 	}
 
 	@FXML
@@ -117,19 +130,18 @@ public class WindowController {
 		messageOutput.appendText("[" + data.getAuthor() + "]: "
 				+ data.getText() + "\r\n");
 	}
-
-	public void handleCrashMessage(UnitPathDTO data){
-		if(data.getPath()==null)
-			models.get(data.getUserId()).rejectCrash();
-		else crashMovement(data.getUserId(),data.getPath());
+	@Deprecated
+	public void handleCrashMessage(UnitPathDTO data) {
+		
 	}
-	public void crashMovement(int userId,List<Location> locations) {
+
+	@Deprecated
+	public void crashMovement(int userId, List<Location> locations) {
 		if (locations.size() != 2) {
 			log.error("incorrect crash parameter");
 			throw new InvalidParameterException();
 		}
-		log.trace("updating path for "+userId);
+		log.trace("updating path for " + userId);
 		models.get(userId).crash(locations.get(0), locations.get(1));
 	}
-
 }
