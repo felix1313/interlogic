@@ -39,8 +39,8 @@ public class Server extends Thread {
 
 			try {
 				log.trace("loading connection properties");
-				input = (getClass()
-						.getResourceAsStream("/config/connection.properties"));
+				input = getClass()
+						.getResourceAsStream("/connection.properties");
 				properties.load(input);
 			} catch (Exception e) {
 				log.error("failed to load connection properties "

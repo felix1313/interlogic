@@ -11,12 +11,12 @@ import com.felix.game.dto.UnitPathDTO;
 import com.felix.game.dto.UserLocationDTO;
 import com.felix.game.Main;
 import com.felix.game.map.model.Location;
-import com.felix.game.model.Bullet;
 import com.felix.game.model.ChatMessage;
 import com.felix.game.model.MapModel;
 import com.felix.game.model.UnitModel;
 import com.felix.game.server.Server;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextArea;
@@ -56,6 +56,7 @@ public class WindowController {
 	}
 
 	public void move(UnitPathDTO path) {
+
 		UnitModel model = models.get(path.getUserId());
 		model.setTargetLocation(path.getPath().get(path.getPath().size() - 1));
 		long ping = System.currentTimeMillis() - path.getTime();
@@ -71,11 +72,15 @@ public class WindowController {
 		UnitModel model = new UnitModel(locationDTO, mapModel);
 
 		models.put(locationDTO.getUserId(), model);
-		mapModel.markUnit(model);
+		Platform.runLater(() -> {
+			mapModel.markUnit(model);
+		});
 	}
-	public void shoot(UserLocationDTO userTarget){
+
+	public void shoot(UserLocationDTO userTarget) {
 		models.get(userTarget.getUserId()).shoot(userTarget.getLocation());
 	}
+
 	private void handleLeftButtonClick(MouseEvent ev) {
 		log.info("canvas click");
 
@@ -88,9 +93,11 @@ public class WindowController {
 		}
 
 		UnitModel model = models.get(me);
-		// model.clearTarget(canvasFront.getGraphicsContext2D());
+
+		Location target = new Location(x, y);
+		if (model.getTargetLocation().equals(target))
+			return;
 		model.setTargetLocation(new Location(x, y));
-		// model.paintTarget(canvasFront.getGraphicsContext2D());
 
 		int brush = mapModel.getBrushcoef();
 		List<Location> path = mapModel.getMap().getPath(
@@ -102,7 +109,7 @@ public class WindowController {
 
 	private void handleRightButtonClick(MouseEvent ev) {
 		log.info("right button click");
-		Location target = new Location(ev.getX(),ev.getY());
+		Location target = new Location(ev.getX(), ev.getY());
 		Server.instance().shoot(target);
 		models.get(me).shoot(target);
 	}
@@ -130,9 +137,10 @@ public class WindowController {
 		messageOutput.appendText("[" + data.getAuthor() + "]: "
 				+ data.getText() + "\r\n");
 	}
+
 	@Deprecated
 	public void handleCrashMessage(UnitPathDTO data) {
-		
+
 	}
 
 	@Deprecated

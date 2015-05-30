@@ -8,6 +8,7 @@ public enum MessageType implements Serializable{
 	UNIT_MOVE,
 	UNIT_STOP,
 	UNIT_ADD,
+	BOT_ADD,
 	UNIT_CRASH,
 	GAME_START,
 	GAME_LOAD,

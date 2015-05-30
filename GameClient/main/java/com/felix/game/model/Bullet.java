@@ -1,6 +1,5 @@
 package com.felix.game.model;
 
-import java.util.List;
 
 import com.felix.game.map.model.Location;
 
@@ -14,7 +13,7 @@ public class Bullet extends MapObject {
 	private Location start;
 	private Location direction;
 	private MapModel map;
-	private BulletShooter shootThread;
+	public boolean isStopped = false;
 
 	public Bullet(UnitModel shooter, Location target, MapModel map) {
 		this.radius = DEFAULT_SIZE * 0.5;
@@ -34,10 +33,7 @@ public class Bullet extends MapObject {
 		});
 	}
 
-	public BulletShooter shoot() {
-		return this.shootThread = new BulletShooter(this);
-	}
-
+	
 	public void paint() {
 		GraphicsContext gc = map.getUnitGraphics();
 		gc.setFill(Color.RED);
@@ -68,64 +64,6 @@ public class Bullet extends MapObject {
 		this.start = start;
 	}
 
-	public class BulletShooter implements Runnable {
-
-		private static final long BULLET_SPEED = 10;
-		private Bullet bullet;
-		private MapModel map;
-		private boolean stopped = false;
-
-		public BulletShooter(Bullet bullet) {
-			this.bullet = bullet;
-			this.map = bullet.map;
-		}
-
-		public void stop() {
-			this.stopped = true;
-		}
-
-		@Override
-		public void run() {
-			long beforeTime, timeDiff, sleep;
-			while (!stopped) {
-				beforeTime = System.currentTimeMillis();
-				Location newLocation = bullet.getLocation().add(direction);
-				if (!map.canGo(newLocation)) {
-					bullet.crash(null);
-					break;
-				}
-				Location oldLocation = bullet.getLocation();
-				bullet.setLocation(newLocation);
-				List<MapObject> crashList = map.getIntersectList(bullet);
-				if (crashList.size() == 0) {
-					Platform.runLater(() -> {
-						bullet.setLocation(oldLocation);
-						bullet.clear();
-						bullet.setLocation(newLocation);
-						bullet.paint();
-					});
-				} else {
-					bullet.setLocation(oldLocation);
-					for (MapObject mo : crashList) {
-						mo.crash(bullet);
-					}
-					bullet.crash(null);
-					break;
-				}
-				timeDiff = System.currentTimeMillis() - beforeTime;
-				sleep = BULLET_SPEED - timeDiff;
-				if (sleep < 2)
-					sleep = 2;
-				try {
-					Thread.sleep(sleep);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-	}
-
 	public Location getDirection() {
 		return direction;
 	}
@@ -136,10 +74,14 @@ public class Bullet extends MapObject {
 
 	@Override
 	public void crash(MapObject mo) {
-		this.shootThread.stop();
+		this.isStopped = true;
 		Platform.runLater(() -> {
 			this.clear();
 		});
+	}
+
+	public boolean isStopped() {
+		return isStopped;
 	}
 
 	public MapModel getMap() {

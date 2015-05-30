@@ -174,8 +174,12 @@ public class Client extends Thread {
 	}
 
 	private void shootMessage(Location target) {
-		this.gameRoom.sendAll(new Message(MessageType.SHOOT_MESSAGE,
-				new UserLocationDTO(getUser().getId(), target)), user.getId());
+		this.gameRoom.sendAll(new Message(MessageType.SHOOT_MESSAGE, new UserLocationDTO(user.getId(), target)),
+				user.getId());
+	}
+
+	private void botAdd(Message m) {
+		gameRoom.sendAll(m, user.getId());
 	}
 
 	@Override
@@ -192,6 +196,9 @@ public class Client extends Thread {
 				break;
 			case GET_ACTIVE_GAMES:
 				sendActiveGames();
+				break;
+			case BOT_ADD:
+				botAdd(message);
 				break;
 			case LOGIN:
 				loginUser((User) message.getData());

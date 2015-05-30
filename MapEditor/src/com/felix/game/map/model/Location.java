@@ -1,6 +1,7 @@
 package com.felix.game.map.model;
 
 import java.io.Serializable;
+import java.util.Random;
 
 public class Location implements Serializable {
 
@@ -8,6 +9,10 @@ public class Location implements Serializable {
 
 	private double x;
 	private double y;
+
+	public Location() {
+
+	}
 
 	public Location(double x, double y) {
 		this.x = x;
@@ -164,6 +169,23 @@ public class Location implements Serializable {
 
 	public Location add(Location a) {
 		return new Location(x + a.x, y + a.y);
+	}
+
+	public static Location getRandomLocation(Map map) {
+		Random rnd = new Random();
+		return new Location(rnd.nextInt(map.getHeight()), rnd.nextInt(map
+				.getWidth()));
+	}
+
+	public static Location getRandomAccessibleLocation(Map map) {
+		Random rnd = new Random();
+		Location loc = new Location(rnd.nextInt(map.getHeight()),
+				rnd.nextInt(map.getWidth()));
+		while (!map.canGo(loc.getIntX(), loc.getIntY())) {
+			loc.setX(rnd.nextInt(map.getHeight()));
+			loc.setY(rnd.nextInt(map.getWidth()));
+		}
+		return loc;
 	}
 
 	@Override

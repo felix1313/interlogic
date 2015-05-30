@@ -1,5 +1,6 @@
 package com.felix.game.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +21,8 @@ public class UnitModel extends MapObject {
 	private MapModel map;
 	private Color color;
 	private ExecutorService moveExecutor = Executors.newSingleThreadExecutor();
-	private ExecutorService shootExecutor = Executors.newCachedThreadPool();
+	private BulletMover bulletMover = new BulletMover();
+	private UnitMover unitMover = new UnitMover(this);
 
 	public UnitModel() {
 		this.radius = UNIT_SIZE * 0.5;
@@ -47,13 +49,16 @@ public class UnitModel extends MapObject {
 	}
 
 	public void startMovement(List<Location> path, long ping) {
-		stopMoving();
-		this.movingTask = new UnitMove(this, path, ping);
-		moveExecutor.execute(movingTask);
+		// stopMoving();
+		// this.movingTask = new UnitMove(this, path, ping);
+		// moveExecutor.execute(movingTask);
+		for (int i = 0; i < path.size(); i++)
+			path.set(i, path.get(i).zoomIn(map.getBrushcoef()));
+		unitMover.move((ArrayList<Location>) path, ping);
 	}
 
 	public void shoot(Location target) {
-		shootExecutor.execute(new Bullet(this, target, getMap()).shoot());
+		bulletMover.addBullet(new Bullet(this, target, getMap()));
 	}
 
 	public void crash(Location rejectedLocation, Location stopLocation) {
@@ -63,8 +68,10 @@ public class UnitModel extends MapObject {
 	}
 
 	public void stopMoving() {
-		if (movingTask != null)
-			movingTask.stop();
+		unitMover.stop();
+
+		// if (movingTask != null)
+		// movingTask.stop();
 	}
 
 	public boolean needsToMove() {
@@ -115,8 +122,11 @@ public class UnitModel extends MapObject {
 		for (MapObject mo : crashList) {
 			this.crash(mo);
 		}
-		if (this.movingTask.isStopped)
+		// if (this.movingTask.isStopped)
+		if (this.unitMover.isStopped()) {
+			log.info("crash occured");
 			setLocation(oldLocation);
+		}
 		map.markUnit(this);
 	}
 

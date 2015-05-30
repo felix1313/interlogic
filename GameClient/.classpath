@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="main/java"/>
-	<classpathentry kind="src" path="config"/>
 	<classpathentry kind="src" path="main/test"/>
+	<classpathentry kind="src" path="config"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="lib/game-server.jar" sourcepath="/TheGame"/>
-	<classpathentry kind="lib" path="lib/interlogic-map-editor.jar" sourcepath="/MapEditor"/>
 	<classpathentry kind="lib" path="lib/openjfx-dialogs-1.0.2.jar"/>
+	<classpathentry kind="src" path="/TheGame"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MapEditor"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

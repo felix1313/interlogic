@@ -200,8 +200,8 @@ public class Map implements Serializable {
 	}
 
 	private List<Location> trimPath(List<Location> path) {
+	//	if(path.size()<3)return new ArrayList<Location>(path);
 		List<Location> res = new ArrayList<Location>();
-		if(path.size()<3)return path;
 		res.add(path.get(0));
 		for (int i = 1; i < path.size() - 1; i++) {
 			if (Math.abs(path.get(i).dist(path.get(i - 1))
@@ -209,6 +209,7 @@ public class Map implements Serializable {
 				res.add(path.get(i));
 			}
 		}
+		if(path.size()>1)
 		res.add(path.get(path.size() - 1));
 		return res;
 	}

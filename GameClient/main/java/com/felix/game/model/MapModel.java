@@ -3,7 +3,6 @@ package com.felix.game.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -101,22 +100,17 @@ public class MapModel {
 
 	public void markUnit(UnitModel m) {
 		setOccupied(m);
-		Platform.runLater(() -> {
-			unitGraphics.setFill(m.getColor());
-			unitGraphics.fillOval(m.getUnitX(), m.getUnitY(),
-					UnitModel.UNIT_SIZE, UnitModel.UNIT_SIZE);
-		});
+		unitGraphics.setFill(m.getColor());
+		unitGraphics.fillOval(m.getUnitX(), m.getUnitY(), UnitModel.UNIT_SIZE,
+				UnitModel.UNIT_SIZE);
 	}
 
 	public void clearLocation(UnitModel model) {
 		clearOccupied(model);
 		double x = model.getUnitX();
 		double y = model.getUnitY();
-		Platform.runLater(() -> {
-			unitGraphics.clearRect(x, y, UnitModel.UNIT_SIZE,
-					UnitModel.UNIT_SIZE);
-		});
-		repaintNeighbours(model.getLocation(), model.getRadius()*3);
+		unitGraphics.clearRect(x, y, UnitModel.UNIT_SIZE, UnitModel.UNIT_SIZE);
+		repaintNeighbours(model.getLocation(), model.getRadius() * 3);
 	}
 
 	public void repaintNeighbours(Location a, double d) {
@@ -127,15 +121,14 @@ public class MapModel {
 					a.getIntY() + dist, occupiedMap[i].length); j++)
 				if (occupiedMap[i][j] != null) {
 					MapObject o = occupiedMap[i][j];
-					Platform.runLater(() -> o.paint());
+					o.paint();
 				}
 	}
 
 	public void clearTarget(UnitModel model) {
 		double x = model.getTargetX();
 		double y = model.getTargetY();
-		Platform.runLater(() -> unitGraphics.clearRect(x, y,
-				UnitModel.UNIT_SIZE, UnitModel.UNIT_SIZE));
+		unitGraphics.clearRect(x, y, UnitModel.UNIT_SIZE, UnitModel.UNIT_SIZE);
 	}
 
 	public MapObject[][] getOccupiedMap() {
