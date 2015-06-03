@@ -2,6 +2,8 @@ package com.felix.game.map.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -200,7 +202,7 @@ public class Map implements Serializable {
 	}
 
 	private List<Location> trimPath(List<Location> path) {
-	//	if(path.size()<3)return new ArrayList<Location>(path);
+		// if(path.size()<3)return new ArrayList<Location>(path);
 		List<Location> res = new ArrayList<Location>();
 		res.add(path.get(0));
 		for (int i = 1; i < path.size() - 1; i++) {
@@ -209,8 +211,8 @@ public class Map implements Serializable {
 				res.add(path.get(i));
 			}
 		}
-		if(path.size()>1)
-		res.add(path.get(path.size() - 1));
+		if (path.size() > 1)
+			res.add(path.get(path.size() - 1));
 		return res;
 	}
 
@@ -221,23 +223,35 @@ public class Map implements Serializable {
 	 * @param to
 	 * @return
 	 */
-	public List<Location> getPath(Location from, Location to) {
+	private PriorityQueue<Path> q = new PriorityQueue<Map.Path>();
+	private HashMap<Location, Path> used = new HashMap<Location, Path>();
+
+	public List<Location> getPath(Location from,Location to){
+		return getPathTheta(from, to);
+	}
+	
+	public List<Location> getPathA(Location from, Location to) {
 		LinkedList<Location> path = new LinkedList<Location>();
-		PriorityQueue<Path> q = new PriorityQueue<Path>();
+		q.clear();
+		used.clear();
 		// HashSet<Path> used = new HashSet<Path>();
 		Double dist[][] = new Double[height][width];
 		dist[from.getIntX()][from.getIntY()] = heuristicDist(from, to);
-		q.add(new Path(from, 0.0, dist[from.getIntX()][from.getIntY()]));
+		Path start = new Path(from, 0.0, dist[from.getIntX()][from.getIntY()]);
+		q.add(start);
 
 		while (q.size() > 0) {
 			Path cur = q.poll();
+			validateParent(cur);
 			if (cur.getLocation().equals(to)) {
 				for (; cur != null; cur = cur.getParent())
 					path.addFirst(cur.location);
 				break;
 			}
+			used.put(cur.getLocation(), cur);
 			for (int i = cur.getX() - 1; i <= cur.getX() + 1; i++)
-				for (int j = cur.getY() - 1; j <= cur.getY() + 1; j++) {
+				for (int j = cur.getY() - 1; j <= cur.getY() + 1; j++) 
+				if(i!=cur.getX() || j!=cur.getY()){
 					if (canGo(i, j)) {
 						double dst = 1;
 						if (i != cur.getX() && j != cur.getY())
@@ -257,5 +271,171 @@ public class Map implements Serializable {
 				}
 		}
 		return trimPath(path);
+	}
+	
+	public List<Location> getPathTheta(Location from, Location to) {
+		LinkedList<Location> path = new LinkedList<Location>();
+		if(q==null)q=new PriorityQueue<Map.Path>();
+		if(used==null)used=new HashMap<Location, Map.Path>();
+		q.clear();
+		used.clear();
+		// HashSet<Path> used = new HashSet<Path>();
+		Double dist[][] = new Double[height][width];
+		dist[from.getIntX()][from.getIntY()] = heuristicDist(from, to);
+		Path start = new Path(from, 0.0, dist[from.getIntX()][from.getIntY()]);
+		start.setParent(start);
+		q.add(start);
+
+		while (q.size() > 0) {
+			Path cur = q.poll();
+			validateParent(cur);
+			if (cur.getLocation().equals(to)) {
+				for (; cur != cur.getParent(); cur = cur.getParent())
+					path.addFirst(cur.location);
+				break;
+			}
+			used.put(cur.getLocation(), cur);
+			for (int i = cur.getX() - 1; i <= cur.getX() + 1; i++)
+				for (int j = cur.getY() - 1; j <= cur.getY() + 1; j++) 
+				if(i!=cur.getX() || j!=cur.getY()){
+					if (canGo(i, j)) {
+						Location loc = new Location(i, j);
+						Path parent = cur.getParent();
+						double dstFromParent = parent.getLocation().dist(loc);
+						
+						double cost = parent.getG() + dstFromParent+loc.dist(to);
+						if (dist[i][j] == null || cost < dist[i][j]) {
+							Path ld = new Path(new Location(i, j), dist[i][j]);
+							q.remove(ld);
+							dist[i][j] = cost;
+							ld.setDist(cost);
+							ld.setG(parent.getG() + dstFromParent);
+							ld.setParent(parent);
+							q.add(ld);
+						}
+					}
+				}
+		}
+		return new ArrayList<Location>(path);// trimPath(path);
+	}
+	
+	
+
+	private void validateParent(Path s) {
+		// Lazy Theta* assumes that there is always line-of-sight from the
+		// parent of an expanded state to a successor state.
+		// When expanding a state, check if this is true.
+		if (!lineOfSight(s.parent.location, s.location)) {
+
+			// Since the previous parent is invalid, set g-value to infinity.
+			s.g = Double.MAX_VALUE;
+
+			// Go over potential parents and update its parent to the parent
+			// that yields the lowest g-value for s.
+			for (int i = s.getX() - 1; i <= s.getX() + 1; i++)
+				for (int j = s.getY() - 1; j <= s.getY() + 1; j++)
+					if (i != s.getX() || j != s.getY()) {
+						Location neighbour = new Location(i, j);
+						if (!used.containsKey(neighbour))
+							continue;
+						Path newParent = used.get(neighbour);
+						double dst = 1;
+						if (i != s.getX() && j != s.getY())
+							dst = Math.sqrt(2);
+						double new_g_val = newParent.getG() + dst;
+						if (new_g_val < s.getG()) {
+							s.setG(new_g_val);
+							s.setParent(newParent);
+						}
+					}
+		}
+
+	}
+
+	private boolean lineOfSight(Location from, Location to) {
+		int x1 = from.getIntX();
+		int x2 = to.getIntX();
+		int y1 = from.getIntY();
+		int y2 = to.getIntY();
+		int dx = x2 - x1;
+		int dy = y2 - y1;
+		int f = 0;
+		int x_offset, y_offset, sx, sy;
+		if (dy < 0) {
+			dy = -dy;
+			sy = -1;
+			y_offset = 0; // Cell is to the North
+		} else {
+			sy = 1;
+			y_offset = 1; // Cell is to the South
+		}
+
+		if (dx < 0) {
+			dx = -dx;
+			sx = -1;
+			x_offset = 0; // Cell is to the West
+		} else {
+			sx = 1;
+			x_offset = 1; // Cell is to the East
+		}
+		if (dx >= dy) { // Move along the x axis and increment/decrement y when
+						// f >= dx.
+			while (x1 != x2) {
+				f = f + dy;
+				if (f >= dx) { // We are changing rows, we might need to check
+								// two cells this iteration.
+					if (!canGo(x1 + x_offset, y1 + y_offset))
+						return false;
+
+					y1 = y1 + sy;
+					f = f - dx;
+				}
+
+				if (f != 0) { // If f == 0, then we are crossing the row at a
+								// corner point and we don't need to check both
+								// cells.
+					if (!canGo(x1 + x_offset, y1 + y_offset))
+						return false;
+				}
+
+				if (dy == 0) { // If we are moving along a horizontal line,
+								// either the north or the south cell should be
+								// unblocked.
+					if (!canGo(x1 + x_offset, y1)
+							&& !canGo(x1 + x_offset, y1 + 1))
+						return false;
+				}
+
+				x1 += sx;
+			}
+		}
+
+		else { // if (dx < dy). Move along the y axis and increment/decrement x
+				// when f >= dy.
+			while (y1 != y2) {
+				f = f + dx;
+				if (f >= dy) {
+					if (!canGo(x1 + x_offset, y1 + y_offset))
+						return false;
+
+					x1 = x1 + sx;
+					f = f - dy;
+				}
+
+				if (f != 0) {
+					if (!canGo(x1 + x_offset, y1 + y_offset))
+						return false;
+				}
+
+				if (dx == 0) {
+					if (!canGo(x1, y1 + y_offset)
+							&& !canGo(x1 + 1, y1 + y_offset))
+						return false;
+				}
+
+				y1 += sy;
+			}
+		}
+		return true;
 	}
 }
